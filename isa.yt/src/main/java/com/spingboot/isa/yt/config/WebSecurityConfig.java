@@ -5,11 +5,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+
+import service.impl.CustomUserDetailsService;
 
 @Configuration
 @EnableWebFluxSecurity
 public class WebSecurityConfig {
+	
+	@Bean
+    public UserDetailsService userDetailsService() {
+        return new CustomUserDetailsService();
+    }
 	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception
