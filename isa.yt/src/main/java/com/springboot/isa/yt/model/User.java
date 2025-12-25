@@ -1,4 +1,4 @@
-package model;
+package com.springboot.isa.yt.model;
 
 import java.sql.Timestamp;
 import java.util.Collection;

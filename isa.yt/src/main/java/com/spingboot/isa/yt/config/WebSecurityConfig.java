@@ -8,7 +8,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 
-import service.impl.CustomUserDetailsService;
+import com.springboot.isa.yt.service.impl.CustomUserDetailsService;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -24,12 +24,7 @@ public class WebSecurityConfig {
 	{
 		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		http.authorizeHttpRequests(req -> req
-				.requestMatchers(
-						"/",
-						"/home",
-						"/signup*",
-						"/login/"
-					).permitAll()
+				.requestMatchers("/signup").permitAll()
 				.anyRequest().authenticated());
 		
 		http.cors(cors -> cors.configure(http));

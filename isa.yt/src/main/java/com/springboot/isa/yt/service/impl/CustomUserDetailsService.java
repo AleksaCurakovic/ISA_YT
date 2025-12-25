@@ -1,11 +1,11 @@
-package service.impl;
+package com.springboot.isa.yt.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import model.User;
-import repository.UserRepository;
+import com.springboot.isa.yt.model.User;
+import com.springboot.isa.yt.repository.UserRepository;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
