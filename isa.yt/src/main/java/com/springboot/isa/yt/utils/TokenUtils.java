@@ -65,10 +65,10 @@ public class TokenUtils {
 	 * @param username Korisničko ime korisnika kojem se token izdaje
 	 * @return JWT token
 	 */
-	public String generateToken(String username) {
+	public String generateToken(String word) {
 		return Jwts.builder()
 				.setIssuer(APP_NAME)
-				.setSubject(username)
+				.setSubject(word)
 				.setAudience(generateAudience())
 				.setIssuedAt(new Date())
 				.setExpiration(generateExpirationDate())
@@ -135,7 +135,7 @@ public class TokenUtils {
 	 * @param token JWT token.
 	 * @return Korisničko ime iz tokena ili null ukoliko ne postoji.
 	 */
-	public String getUsernameFromToken(String token) {
+	public String getSubjectFromToken(String token) {
 		String username;
 		
 		try {
@@ -245,7 +245,7 @@ public class TokenUtils {
 	 */
 	public Boolean validateToken(String token, UserDetails userDetails) {
 		User user = (User) userDetails;
-		final String username = getUsernameFromToken(token);
+		final String username = getSubjectFromToken(token);
 		final Date created = getIssuedAtDateFromToken(token);
 		
 		// Token je validan kada:

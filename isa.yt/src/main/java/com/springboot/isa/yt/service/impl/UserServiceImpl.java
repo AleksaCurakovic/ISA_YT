@@ -3,8 +3,6 @@ package com.springboot.isa.yt.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +38,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public User save(UserRequestDTO userRequest) {
+	public User register(UserRequestDTO userRequest) {
 		User u = new User();
 		u.setUsername(userRequest.getUsername());
 		u.setPassword(passwordEncoder.encode(userRequest.getPassword()));
@@ -53,5 +51,15 @@ public class UserServiceImpl implements UserService{
 		u.setRoles(roles);
 		
 		return this.userRepository.save(u);
+	}
+
+	@Override
+	public User findByEmail(String email) {
+		return userRepository.findByUsername(email);
+	}
+
+	@Override
+	public User save(User user) {
+		return userRepository.save(user);
 	}
 }
