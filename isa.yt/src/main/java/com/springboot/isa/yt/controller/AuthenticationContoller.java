@@ -25,6 +25,10 @@ import com.springboot.isa.yt.service.UserService;
 import com.springboot.isa.yt.utils.TokenUtils;
 
 import exception.ResourceConflictException;
+import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
+import io.github.resilience4j.ratelimiter.RateLimiter;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -41,14 +45,32 @@ public class AuthenticationContoller {
 	@Autowired
 	private EmailService emailService;
 	
+	@Autowired
+	private RateLimiterRegistry rateLimiterRegistry;
+	
 	@PostMapping("/login")
 	public ResponseEntity<UserTokenStateDTO> createAuthenticationToken(
-			@RequestBody JwtAuthenticationRequestDTO authenticationRequest, HttpServletResponse response) {
+			@RequestBody JwtAuthenticationRequestDTO authenticationRequest, HttpServletResponse response, HttpServletRequest request) {
+		
+		var config = rateLimiterRegistry.rateLimiter("standard").getRateLimiterConfig();
+		String ip = request.getRemoteAddr();
+		RateLimiter perIpLimiter = rateLimiterRegistry.rateLimiter("login:" + ip, config);
+
+        try {
+            RateLimiter.waitForPermission(perIpLimiter);
+        } catch (RequestNotPermitted ex) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                    .body(null);
+        }
+		
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 				authenticationRequest.getUsername(), authenticationRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		User user = (User) authentication.getPrincipal();
+		if (!user.isEnabled()) {
+			return null;
+		}
 		String jwt = tokenUtils.generateToken(user.getUsername());
 		int expiresIn = tokenUtils.getExpiredIn();
 

@@ -63,7 +63,8 @@ public class WebSecurityConfig {
 		http.exceptionHandling(exception -> exception.authenticationEntryPoint(restAuthenticationEntryPoint));
 		http.authorizeHttpRequests(req -> req
 				.requestMatchers("/signup",
-						"/login").permitAll()
+						"/login",
+						"/verify").permitAll()
 				.anyRequest().authenticated());
 		
 		http.cors(cors -> cors.configure(http));
