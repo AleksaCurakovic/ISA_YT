@@ -1,4 +1,4 @@
-package com.spingboot.isa.yt.config;
+package com.springboot.isa.yt.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
