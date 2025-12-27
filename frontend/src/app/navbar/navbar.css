@@ -1,0 +1,87 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* NAVBAR */
+.navbar {
+  height: 56px;
+  width: 100%;
+  background-color: #0f0f0f;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 24px;
+  border-bottom: 1px solid #272727;
+}
+
+.navbar a {
+  text-decoration: none;
+}
+
+.navbar a:visited,
+.navbar a:hover,
+.navbar a:active {
+  text-decoration: none;
+}
+
+/* LOGO */
+.logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: #dc2626;              /* crimson text */
+  background-color: #ffffff;  /* white badge */
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  letter-spacing: -0.5px;
+}
+
+
+/* RIGHT SIDE */
+.navbar-right {
+  display: flex;
+  gap: 12px;
+}
+
+/* BASE BUTTON */
+.btn {
+  height: 36px;
+  padding: 0 16px;
+
+  display: inline-flex;              /* FIX */
+  align-items: center;               /* FIX */
+  justify-content: center;            /* FIX */
+
+  border-radius: 18px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+
+  line-height: 1;                     /* FIX */
+  text-decoration: none;              /* safety */
+}
+
+/* REGISTER */
+.btn-outline {
+  background: transparent;
+  color: #dc2626;
+  border: 1px solid #dc2626;
+}
+
+.btn-outline:hover {
+  background-color: rgba(220, 38, 38, 0.15);
+}
+
+/* LOGIN */
+.btn-solid {
+  background-color: #dc2626;
+  color: #ffffff;
+  border: none;
+}
+
+.btn-solid:hover {
+  background-color: #ef4444;
+}
