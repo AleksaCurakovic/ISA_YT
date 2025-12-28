@@ -89,3 +89,13 @@
 .link:hover {
   text-decoration: underline;
 }
+
+.error {
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.input.ng-touched.ng-invalid {
+  border-color: #dc2626;
+}

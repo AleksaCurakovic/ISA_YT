@@ -78,24 +78,23 @@ public class AuthenticationContoller {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<User> addUser(@RequestBody UserRequestDTO userRequest, UriComponentsBuilder ucBuilder) throws Exception {
+	public ResponseEntity<String> addUser(@RequestBody UserRequestDTO userRequest, UriComponentsBuilder ucBuilder) {
 		User existUserName = this.userService.findByUsername(userRequest.getUsername());
 		User existUserEmail = this.userService.findByEmail(userRequest.getEmail());
 
 		if (existUserName != null) {
-			throw new ResourceConflictException(userRequest.getId(), "Username already in use");
+			ResponseEntity.status(HttpStatus.CONFLICT)
+        						.body("Username already taken");;
 		}
-		
 		if (existUserEmail != null) {
-			throw new ResourceConflictException(userRequest.getId(), "Email already in use");
-		}
-		 
-		
+			ResponseEntity.status(HttpStatus.CONFLICT)
+								.body("Email already taken");
+		} 		
 		String emailToken = tokenUtils.generateToken(userRequest.getEmail());
 		emailService.sendVerificationEmail(userRequest.getEmail(), userRequest.getUsername(), emailToken);
 		User user = this.userService.register(userRequest);
 		
-		return new ResponseEntity<>(user, HttpStatus.CREATED);
+		return new ResponseEntity.status(HttpStatus.CREATED).body("User successfully registered");
 	}
 	
 	@GetMapping("/verify")
@@ -115,7 +114,7 @@ public class AuthenticationContoller {
         
         user.setEnabled(true);
         userService.save(user);
-        response.sendRedirect("http://localhost:4200/login?verified=true");
+        response.sendRedirect("http://localhost:4200/verified");
         return null;
         						
     }

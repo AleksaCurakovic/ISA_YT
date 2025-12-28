@@ -3,18 +3,24 @@
     <h1 class="title">Login</h1>
     <p class="subtitle">Welcome back to <span class="brand">YouTubic</span>.</p>
 
-    <form class="form">
+    <form class="form" [formGroup]="loginForm" (ngSubmit)="login()">
       <label class="label">
         Username
-        <input class="input" type="email" placeholder="Alex02" />
+        <input class="input" type="text" formControlName="username" placeholder="Alex02"/>
+        @if (loginForm.controls['username'].touched && loginForm.controls['username'].invalid) {
+          <span class="error">Username is required</span>
+        }
       </label>
 
       <label class="label">
         Password
-        <input class="input" type="password" placeholder="••••••••" />
+        <input class="input" type="password" formControlName="password" placeholder="••••••••"/>
+        @if (loginForm.controls['password'].touched && loginForm.controls['password'].invalid) {
+          <span class="error">Password is required</span>
+        }
       </label>
 
-      <button class="primary" type="button">Login</button>
+      <button class="primary" type="submit">Login</button>
 
       <p class="hint">
         Don’t have an account?

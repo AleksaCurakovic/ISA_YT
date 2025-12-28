@@ -3,38 +3,65 @@
     <h1 class="title">Register</h1>
     <p class="subtitle">Create your <span class="brand">YouTubic</span> account.</p>
 
-    <form class="form">
-      <label class="label">
+    <form class="form" [formGroup]="registerForm" (ngSubmit)="register()">
+       <label class="label">
         Username
-        <input class="input" type="text" placeholder="Alex02" />
+        <input class="input" type="text" formControlName="username" placeholder="Alex02"/>
+        @if (registerForm.controls['username'].touched && registerForm.controls['username'].invalid) {
+          <span class="error">Username is required (min 3 characters)</span>
+        }
       </label>
 
       <label class="label">
         Email
-        <input class="input" type="email" placeholder="alex@example.com" />
+        <input class="input" type="email" formControlName="email" placeholder="alex02@example.com"/>
+        @if (registerForm.controls['email'].touched && registerForm.controls['email'].invalid) {
+          <span class="error">Valid email required</span>
+        }
       </label>
 
       <label class="label">
         Password
-        <input class="input" type="password" placeholder="••••••••" />
+        <input class="input" type="password" formControlName="password" placeholder="••••••••"/>
+        @if (registerForm.controls['password'].touched && registerForm.controls['password'].invalid) {
+          <span class="error">Min 6 characters</span>
+        }
       </label>
 
       <label class="label">
+        Confirm Password
+        <input class="input" type="password" formControlName="confirmPassword" placeholder="••••••••"/>
+        @if (registerForm.controls['confirmPassword'].touched &&
+              registerForm.value.password !== registerForm.value.confirmPassword) {
+          <span class="error">Passwords do not match</span>
+        }
+      </label>
+
+     <label class="label">
         Name
-        <input class="input" type="password" placeholder="alex" />
+        <input class="input" type="text" formControlName="firstName" placeholder="alex" />
+        @if (registerForm.controls['firstName'].touched && registerForm.controls['firstName'].invalid) {
+          <span class="error">Name is required</span>
+        }
       </label>
 
       <label class="label">
         Last Name
-        <input class="input" type="password" placeholder="smith" />
+        <input class="input" type="text" formControlName="lastName" placeholder="smith" />
+        @if (registerForm.controls['lastName'].touched && registerForm.controls['lastName'].invalid) {
+          <span class="error">Last name is required</span>
+        }
       </label>
 
       <label class="label">
         Address
-        <input class="input" type="password" placeholder="Street 123" />
+        <input class="input" type="text" formControlName="address" placeholder="Street 123" />
+        @if (registerForm.controls['address'].touched && registerForm.controls['address'].invalid) {
+          <span class="error">Address is required</span>
+        }
       </label>
 
-      <button class="primary" type="button">Register</button>
+      <button class="primary" type="submit">Register</button>
 
       <p class="hint">
         Already have an account?
