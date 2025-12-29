@@ -159,7 +159,7 @@ export class VideoUpload implements OnDestroy {
     const rawFormat = this.videoForm.getRawValue();
     const payload = new FormData();
     payload.append('title', rawFormat.title);
-    payload.append('author', 'Aleksa');
+    payload.append('author', this.loggedInUsername!);
     payload.append('description', rawFormat.description);
     payload.append('geoLocation', rawFormat.geoLocation ?? '');
     payload.append('tags', rawFormat.tags);
@@ -174,7 +174,6 @@ export class VideoUpload implements OnDestroy {
           if (event.type === HttpEventType.UploadProgress) {
             const total = event.total ?? 0;
             this.uploadPct = total ? Math.round((100 * event.loaded) / total) : 0;
-            this.cdr.markForCheck();
           }
 
           if (event.type === HttpEventType.Response) {
@@ -183,6 +182,7 @@ export class VideoUpload implements OnDestroy {
             this.uploadFinished = true;
             console.log('Uploaded:', event.body);
           }
+          this.cdr.markForCheck();
         },
         error: (err: HttpErrorResponse) => {
           this.isUploading = false;

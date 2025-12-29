@@ -12,6 +12,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,7 @@ import com.springboot.isa.yt.dto.UploadRequestDTO;
 import com.springboot.isa.yt.model.VideoUpload;
 import com.springboot.isa.yt.repository.UploadRepository;
 import com.springboot.isa.yt.service.UploadService;
+
 
 
 @Service
@@ -34,11 +36,14 @@ public class UploadServiceImpl implements UploadService {
         this.root = Paths.get(rootDir).toAbsolutePath().normalize();
     }
 
+    @Transactional(timeout = 5)
 	@Override
-	public VideoUpload save(UploadRequestDTO uploadRequest) {
+	public VideoUpload save(UploadRequestDTO uploadRequest) throws RuntimeException {
+    	 String thumbnailUrl = "";
+         String videoUrl = "";
 		 try {
-	            String thumbnailUrl = saveFile(uploadRequest.getThumbnail(), "thumbnails");
-	            String videoUrl = saveFile(uploadRequest.getVideo(), "videos");
+	            thumbnailUrl = saveFile(uploadRequest.getThumbnail(), "thumbnails");
+	            videoUrl = saveFile(uploadRequest.getVideo(), "videos");
 
 	            VideoUpload videoUpload = new VideoUpload();
 	            videoUpload.setAuthor(uploadRequest.getAuthor());
@@ -49,11 +54,15 @@ public class UploadServiceImpl implements UploadService {
 	            videoUpload.setGeoLocation(uploadRequest.getGeoLocation());
 	            videoUpload.setThumbnailUrl(thumbnailUrl);
 	            videoUpload.setVideoUrl(videoUrl);
+	            
+	            //Thread.sleep(6000); uncomment for transaction
 
 	            return uploadRepository.save(videoUpload);
 
-	        } catch (IOException ex) {
-	            throw new RuntimeException("Failed to save upload files", ex);
+	        } catch (Exception ex) {
+	            deleteByPublicUrl(thumbnailUrl);
+	            deleteByPublicUrl(videoUrl);
+	            throw new RuntimeException("Upload failed; rolled back files", ex);
 	        }
 	}
 	
@@ -82,6 +91,17 @@ public class UploadServiceImpl implements UploadService {
 
 	        return "/uploads/" + subDir + "/" + filename;
 	    }
+	 
+	 private void deleteByPublicUrl(String publicUrl) {
+		    if (publicUrl == null) return;
+
+		    String relative = publicUrl.startsWith("/uploads/")
+		            ? publicUrl.substring("/uploads/".length())
+		            : publicUrl;
+
+		    Path p = root.resolve(relative).normalize();
+		    try { Files.deleteIfExists(p); } catch (IOException ignored) {}
+		}
 
 
 	@Override
