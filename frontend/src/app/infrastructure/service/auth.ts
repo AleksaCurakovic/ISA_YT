@@ -39,7 +39,7 @@ export class Auth {
       .post<string>(`${this.API_URL}/signup`, payload)
       .subscribe({
         next: (res) => {
-          this.router.navigate(['/']);
+          this.router.navigate(['/login']);
           console.log(res);
         },
         error: (err) => {

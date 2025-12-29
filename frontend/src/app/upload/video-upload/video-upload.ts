@@ -82,6 +82,7 @@ export class VideoUpload implements OnDestroy {
   videoFileSize = '—';
   uploadPct = 0;
   isUploading = false;
+  uploadFinished = false;
   uploadError: string | null = null;
   loggedInUsername: string | null = null;
   
@@ -158,7 +159,7 @@ export class VideoUpload implements OnDestroy {
     const rawFormat = this.videoForm.getRawValue();
     const payload = new FormData();
     payload.append('title', rawFormat.title);
-    payload.append('author', this.loggedInUsername!);
+    payload.append('author', 'Aleksa');
     payload.append('description', rawFormat.description);
     payload.append('geoLocation', rawFormat.geoLocation ?? '');
     payload.append('tags', rawFormat.tags);
@@ -173,11 +174,13 @@ export class VideoUpload implements OnDestroy {
           if (event.type === HttpEventType.UploadProgress) {
             const total = event.total ?? 0;
             this.uploadPct = total ? Math.round((100 * event.loaded) / total) : 0;
+            this.cdr.markForCheck();
           }
 
           if (event.type === HttpEventType.Response) {
             this.uploadPct = 100;
             this.isUploading = false;
+            this.uploadFinished = true;
             console.log('Uploaded:', event.body);
           }
         },
@@ -190,7 +193,7 @@ export class VideoUpload implements OnDestroy {
 
   } 
 
-   ngOnInit(): void {
+  ngOnInit(): void {
     this.authService.authState$.subscribe(username  => {
       this.loggedInUsername = username;
     })

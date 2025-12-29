@@ -3,6 +3,7 @@ package com.springboot.isa.yt.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -52,6 +53,19 @@ public class WebSecurityConfig {
  	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
  	    return authConfig.getAuthenticationManager();
  	}
+ 	
+ 	@Bean
+ 	public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
+ 	  var config = new org.springframework.web.cors.CorsConfiguration();
+ 	  config.setAllowedOrigins(java.util.List.of("http://localhost:4200"));
+ 	  config.setAllowedMethods(java.util.List.of("GET","POST","PUT","DELETE","OPTIONS"));
+ 	  config.setAllowedHeaders(java.util.List.of("*"));
+ 	  config.setAllowCredentials(true);
+
+ 	  var source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+ 	  source.registerCorsConfiguration("/**", config);
+ 	  return source;
+ 	}
 
 	@Autowired
 	private TokenUtils tokenUtils;
@@ -62,12 +76,13 @@ public class WebSecurityConfig {
 		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		http.exceptionHandling(exception -> exception.authenticationEntryPoint(restAuthenticationEntryPoint));
 		http.authorizeHttpRequests(req -> req
+				.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 				.requestMatchers("/signup",
 						"/login",
-						"/verify").permitAll()
+						"/verify", "/upload", "/uploads/**").permitAll()
 				.anyRequest().authenticated());
 		
-		http.cors(cors -> cors.configure(http));
+		http.cors(cors -> {});
 		http.csrf(csrf -> csrf.disable());
 		
 		http.addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);

@@ -1,7 +1,7 @@
 package com.springboot.isa.yt.model;
 
-import java.sql.Date;
-import java.util.ArrayList;
+import java.util.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,7 +28,7 @@ public class VideoUpload {
 	private String description;
 	
 	@Column(name = "tags")
-	private ArrayList<String> tags;
+	private String tags;
 	
 	@Column(name = "thumbnail_url")
 	private String thumbnailUrl;
@@ -74,11 +74,11 @@ public class VideoUpload {
 		this.description = description;
 	}
 
-	public ArrayList<String> getTags() {
+	public String getTags() {
 		return tags;
 	}
 
-	public void setTags(ArrayList<String> tags) {
+	public void setTags(String tags) {
 		this.tags = tags;
 	}
 

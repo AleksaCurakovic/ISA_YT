@@ -3,7 +3,7 @@ export interface VideoUpload {
     title: string;
     description: string;
     author: string;
-    tags: string[];
+    tags: string;
     thumbnailUrl: string;
     videoUrl: string;
     createdAt: Date;

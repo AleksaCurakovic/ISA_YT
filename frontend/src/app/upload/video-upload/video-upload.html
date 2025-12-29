@@ -75,7 +75,7 @@
                 <span class="error">Only JPG/PNG allowed</span>
               }
               @if (videoForm.controls['thumbnailFile'].touched && videoForm.controls['thumbnailFile'].errors?.['maxFileSize']) {
-                <span class="error">Thumbnail too large (max 2MB)</span>
+                <span class="error">Thumbnail too large (max 4MB)</span>
               }
             </div>
           </div>
@@ -172,10 +172,10 @@
               <span class="progress-pct">{{uploadPct}}%</span>
             </div>
             <div class="bar">
-               <div class="bar-fill" [style.width.%]="uploadPct"></div>
+               <div class="bar-fill"  [style.width]="uploadPct + '%'"></div>
             </div>
             <div class="progress-hint">
-            @if (isUploading) { Uploading... } @else { Starts when you click Upload. }
+            @if (isUploading) { Uploading... } @else if (uploadFinished) { Upload complete!  } @else { Starts when you click Upload. }
           </div>
           </div>
         </div>
