@@ -1,4 +1,4 @@
-package exception;
+package com.springboot.isa.yt.exception;
 
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.HttpStatus;

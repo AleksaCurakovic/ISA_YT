@@ -24,7 +24,6 @@ import com.springboot.isa.yt.service.EmailService;
 import com.springboot.isa.yt.service.UserService;
 import com.springboot.isa.yt.utils.TokenUtils;
 
-import exception.ResourceConflictException;
 import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import io.github.resilience4j.ratelimiter.RateLimiter;
@@ -78,23 +77,23 @@ public class AuthenticationContoller {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<String> addUser(@RequestBody UserRequestDTO userRequest, UriComponentsBuilder ucBuilder) {
+	public ResponseEntity<User> addUser(@RequestBody UserRequestDTO userRequest, UriComponentsBuilder ucBuilder) {
 		User existUserName = this.userService.findByUsername(userRequest.getUsername());
 		User existUserEmail = this.userService.findByEmail(userRequest.getEmail());
 
 		if (existUserName != null) {
-			ResponseEntity.status(HttpStatus.CONFLICT)
-        						.body("Username already taken");;
+			return ResponseEntity.status(HttpStatus.CONFLICT)
+        						.body(null);
 		}
 		if (existUserEmail != null) {
-			ResponseEntity.status(HttpStatus.CONFLICT)
-								.body("Email already taken");
+			return ResponseEntity.status(HttpStatus.CONFLICT)
+								.body(null);
 		} 		
 		String emailToken = tokenUtils.generateToken(userRequest.getEmail());
 		emailService.sendVerificationEmail(userRequest.getEmail(), userRequest.getUsername(), emailToken);
 		User user = this.userService.register(userRequest);
 		
-		return new ResponseEntity.status(HttpStatus.CREATED).body("User successfully registered");
+		return ResponseEntity.status(HttpStatus.CREATED).body(user);
 	}
 	
 	@GetMapping("/verify")
@@ -114,7 +113,7 @@ public class AuthenticationContoller {
         
         user.setEnabled(true);
         userService.save(user);
-        response.sendRedirect("http://localhost:4200/verified");
+        response.sendRedirect("http://localhost:4200/login");
         return null;
         						
     }

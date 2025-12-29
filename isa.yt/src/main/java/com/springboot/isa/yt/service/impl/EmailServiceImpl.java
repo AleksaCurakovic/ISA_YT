@@ -28,7 +28,7 @@ public class EmailServiceImpl implements EmailService {
 	        String link = "http://localhost:8080/verify?token=" + token;
 	        
 	        String htmlContent = String.format(
-	        	    "<h2>Welcome to YouTubic, %s!</h2>" +
+	        	    "<h2>Welcome to Jutjubić, %s!</h2>" +
 	        	    	    "<p>To complete your registration, please follow the link below:</p>" +
 	        	    	    "<p><a href='%s'>Verify My Account</a></p>" +
 	        	    	    "<br><p>Thank you!</p>", 

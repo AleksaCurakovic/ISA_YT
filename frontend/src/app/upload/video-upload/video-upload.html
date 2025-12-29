@@ -1,0 +1,185 @@
+<div class="page">
+  <div class="card">
+    <div class="header">
+      <h1 class="title">Upload</h1>
+      <p class="subtitle">
+        Share your <span class="brand">Jutjubić</span> video.
+      </p>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT: FORM -->
+      <form class="form" [formGroup]="videoForm" (ngSubmit)="uploadVideo()">
+        <label class="label">
+          Title
+          <input class="input" type="text" formControlName="title" placeholder="My first Jutjubić video..." />
+          @if (videoForm.controls['title'].touched && videoForm.controls['title'].invalid) {
+            <span class="error">Title is required (max 100 characters)</span>
+          }
+        </label>
+
+        <label class="label">
+          Description
+          <textarea class="textarea" formControlName="description" rows="5" placeholder="Tell people what your video is about..."></textarea>
+          @if (videoForm.controls['description'].touched && videoForm.controls['description'].invalid) {
+            <span class="error">Description is required (max 500 characters)</span>
+          }
+        </label>
+
+        <label class="label">
+          Tags (comma-separated)
+          <input class="input" type="text" formControlName="tags" placeholder="gaming, music, tutorial" />
+          <span class="hint">Example: <span class="mono">travel, vlog, serbia</span></span>
+          @if (videoForm.controls['tags'].touched && videoForm.controls['tags'].invalid) {
+            <span class="error">At least one tag is required</span>
+          }
+        </label>
+
+        <label class="label">
+          Geo location (optional)
+          <input class="input" type="text" formControlName="geoLocation" placeholder="Belgrade, Serbia" />
+        </label>
+
+        <div class="divider"></div>
+
+        <!-- FILE PICKERS -->
+        <div class="two-col">
+          <div class="file-card">
+            <div class="file-head">
+              <div class="file-title">Thumbnail</div>
+            </div>
+
+            <label class="file-drop">
+              <input class="file-input" type="file" accept="image/*" (change)="onThumbnailSelected($event)"/>
+              <div class="file-drop-inner">
+                <div class="file-icon">🖼️</div>
+                <div class="file-text">
+                  <div class="file-strong">Choose image</div>
+                </div>
+              </div>
+            </label>
+
+            <div class="preview">
+              <div class="preview-label">Preview</div>
+              <div class="thumb-preview">
+                @if (thumbnailPreviewUrl) {
+                <img class="thumb-img" [src]="thumbnailPreviewUrl" alt="Thumbnail preview" />
+                } @else {
+                  <div class="thumb-skeleton"></div>
+                }
+              </div>
+              @if (videoForm.controls['thumbnailFile'].touched && videoForm.controls['thumbnailFile'].errors?.['requiredFile']) {
+                <span class="error">Thumbnail is required</span>
+              }
+              @if (videoForm.controls['thumbnailFile'].touched && videoForm.controls['thumbnailFile'].errors?.['mimeType']) {
+                <span class="error">Only JPG/PNG allowed</span>
+              }
+              @if (videoForm.controls['thumbnailFile'].touched && videoForm.controls['thumbnailFile'].errors?.['maxFileSize']) {
+                <span class="error">Thumbnail too large (max 2MB)</span>
+              }
+            </div>
+          </div>
+
+          <div class="file-card">
+            <div class="file-head">
+              <div class="file-title">Video</div>
+            </div>
+
+            <label class="file-drop">
+              <input class="file-input" type="file" accept="video/*"  (change)="onVideoSelected($event)"/>
+              <div class="file-drop-inner">
+                <div class="file-icon">🎬</div>
+                <div class="file-text">
+                  <div class="file-strong">Choose video</div>
+                </div>
+              </div>
+            </label>
+
+            <div class="preview">
+              <div class="preview-label">Details</div>
+              <div class="meta">
+                <div class="meta-row">
+                  <span class="meta-k">Filename</span>
+                  <span class="meta-v">{{videoFileName}}</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-k">Size</span>
+                  <span class="meta-v">{{videoFileSize}}</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-k">Duration</span>
+                  <span class="meta-v">{{getDurationLabel()}}</span>
+                </div>
+              </div>
+               @if (videoForm.controls['videoFile'].touched && videoForm.controls['videoFile'].errors?.['requiredFile']) {
+        <span class="error">Video is required</span>
+      }
+      @if (videoForm.controls['videoFile'].touched && videoForm.controls['videoFile'].errors?.['mimeType']) {
+        <span class="error">Only MP4/WebM allowed</span>
+      }
+      @if (videoForm.controls['videoFile'].touched && videoForm.controls['videoFile'].errors?.['maxFileSize']) {
+        <span class="error">Video too large (max 200MB)</span>
+      }
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-outline" type="button">Cancel</button>
+          <button class="btn btn-solid" type="submit" [disabled]="isUploading">Upload</button>
+        </div>
+
+      </form>
+
+      <!-- RIGHT: PREVIEW PANEL -->
+      <aside class="side">
+        <div class="side-card">
+          <div class="side-title">Preview</div>
+
+          <div class="video-preview">
+           @if (videoPreviewUrl) {
+            <video class="video-el" [src]="videoPreviewUrl" controls></video>
+          } @else {
+            <div class="video-skeleton"><div class="play">▶</div></div>
+          }
+          </div>
+
+          <div class="side-meta">
+            <div class="side-line">
+              <span class="k">Title</span>
+              <span class="v">{{videoForm.get('title')?.value || '—'}}</span>
+            </div>
+            <div class="side-line">
+              <span class="k">Author</span>
+              <span class="v">{{videoForm.get('author')?.value || '—'}}</span>
+            </div>
+            <div class="side-line">
+              <span class="k">Tags</span>
+              <span class="v">{{videoForm.get('tags')?.value || '—'}}</span>
+            </div>
+            <div class="side-line">
+              <span class="k">Location</span>
+              <span class="v">{{videoForm.get('geoLocation')?.value || '—'}}</span>
+            </div>
+          </div>
+
+           @if (uploadError) {
+            <div class="error">{{ uploadError }}</div>
+          }
+          <div class="progress">
+            <div class="progress-top">
+              <span class="progress-label">Upload progress</span>
+              <span class="progress-pct">{{uploadPct}}%</span>
+            </div>
+            <div class="bar">
+               <div class="bar-fill" [style.width.%]="uploadPct"></div>
+            </div>
+            <div class="progress-hint">
+            @if (isUploading) { Uploading... } @else { Starts when you click Upload. }
+          </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>

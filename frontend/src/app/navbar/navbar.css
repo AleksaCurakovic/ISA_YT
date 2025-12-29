@@ -5,17 +5,23 @@
 
 /* NAVBAR */
 .navbar {
-  height: 56px;
+  position: fixed;          /* FIXED */
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 56px;
+
   background-color: #0f0f0f;
+  border-bottom: 1px solid #272727;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   padding: 0 24px;
-  border-bottom: 1px solid #272727;
+  z-index: 1000;            /* stay above content */
 }
+
 
 .navbar a {
   text-decoration: none;
@@ -43,6 +49,7 @@
 /* RIGHT SIDE */
 .navbar-right {
   display: flex;
+  align-items: center;
   gap: 12px;
 }
 
@@ -84,4 +91,11 @@
 
 .btn-solid:hover {
   background-color: #ef4444;
+}
+
+.username {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.9;
 }

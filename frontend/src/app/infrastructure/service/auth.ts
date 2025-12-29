@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LoginRequest } from '../model/loginRequest';
-import { RegisterRequest } from '../model/registerRequest';
-import { TokenResponse } from '../model/tokenResponse';
+import { LoginRequest } from '../../model/loginRequest';
+import { RegisterRequest } from '../../model/registerRequest';
+import { TokenResponse } from '../../model/tokenResponse';
 import { jwtDecode } from 'jwt-decode';
 import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
@@ -13,11 +13,9 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class Auth {
-
   private readonly API_URL = 'http://localhost:8080';
   private authStateSubject = new BehaviorSubject<string | null>(this.decodeToken());
   public authState$ = this.authStateSubject.asObservable();
-
   constructor(private http: HttpClient, private router: Router) { }
 
   login(payload: LoginRequest): void {
