@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { VideoUpload } from '../../model/videoUpload';
 import { HttpEvent } from '@angular/common/http';
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -16,5 +17,9 @@ export class UploadService  {
       reportProgress: true,
       observe: 'events',
     })
+  }
+
+  getAllUploads(): Observable<VideoUpload[]> {
+    return this.http.get<VideoUpload[]>(`${this.API_URL}/getAllUploads`);
   }
 }

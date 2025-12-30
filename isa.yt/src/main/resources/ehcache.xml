@@ -1,0 +1,38 @@
+<config>
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.ehcache.org/v3"
+  xsi:schemaLocation="http://www.ehcache.org/v3
+    http://www.ehcache.org/schema/ehcache-core-3.7.xsd">
+
+  <!-- Default cache template (RAM-only) -->
+  <cache-template name="default">
+    <expiry>
+      <!-- Keep thumbnails in cache for 30 minutes -->
+      <ttl unit="minutes">30</ttl>
+    </expiry>
+
+    <listeners>
+      <listener>
+        <class>com.springboot.isa.yt.logger.CacheLogger</class>
+        <event-firing-mode>ASYNCHRONOUS</event-firing-mode>
+        <event-ordering-mode>UNORDERED</event-ordering-mode>
+        <events-to-fire-on>CREATED</events-to-fire-on>
+        <events-to-fire-on>EXPIRED</events-to-fire-on>
+        <events-to-fire-on>EVICTED</events-to-fire-on>
+        <events-to-fire-on>REMOVED</events-to-fire-on>
+      </listener>
+    </listeners>
+
+    <resources>
+      <!-- RAM only: keep up to 500 entries (thumbnails) -->
+      <heap unit="entries">500</heap>
+    </resources>
+  </cache-template>
+
+  <!-- Cache for thumbnail bytes -->
+  <cache alias="thumbnails" uses-template="default">
+    <key-type>java.lang.String</key-type>
+    <value-type>[B</value-type> <!-- byte[] -->
+  </cache>
+
+</config>

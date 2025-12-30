@@ -9,4 +9,5 @@ public interface UploadService {
 	VideoUpload save(UploadRequestDTO uploadRequest);
 	VideoUpload findByAuthor(String author);
 	List<VideoUpload> findAll();
+	byte[] getThumbnail(String filname);
 }
