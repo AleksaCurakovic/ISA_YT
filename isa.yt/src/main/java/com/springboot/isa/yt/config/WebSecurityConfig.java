@@ -79,7 +79,10 @@ public class WebSecurityConfig {
 				.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 				.requestMatchers("/signup",
 						"/login",
-						"/verify", "/upload", "/uploads/**").permitAll()
+						"/verify",
+						"/upload",
+						"/uploads/**",
+						"/getAllUploads").permitAll()
 				.anyRequest().authenticated());
 		
 		http.cors(cors -> {});

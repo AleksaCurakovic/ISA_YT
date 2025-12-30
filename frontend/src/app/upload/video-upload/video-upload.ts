@@ -96,7 +96,7 @@ export class VideoUpload implements OnDestroy {
       geoLocation: [''],
       thumbnailFile: [
         null as File | null,
-        [requiredFile(), maxFileSize(this.MAX_THUMB_BYTES), mimeTypes(['image/jpeg', 'image/png'])],
+        [requiredFile(), maxFileSize(this.MAX_THUMB_BYTES), mimeTypes(['image/jpeg'])],
     ],
       videoFile: [
         null as File | null,

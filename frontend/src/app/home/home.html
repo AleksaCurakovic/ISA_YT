@@ -1,1 +1,44 @@
-<p>home works!</p>
+<div class="home">
+  <div class="container">
+    <div class="topbar">
+      <h1 class="headline">Home</h1>
+
+      <div class="search">
+        <span class="search-ico">🔎</span>
+        <input class="search-input" type="text" placeholder="Search YouTubic..." />
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- CARD 1 -->
+    @for (video of videoUploads(); track video.id) {
+        <a class="card">
+
+            <div class="thumb">
+            <img
+                class="thumb-img"
+                [src]= "'http://localhost:8080' + video.thumbnailUrl"
+                alt="thumbnail"
+            />
+            <span class="duration">--:--</span>
+            </div>
+
+            <div class="meta">
+            <div class="video-title">{{ video.title }}</div>
+
+            <div class="sub">
+                <span class="author">{{ video.author }}</span>
+                <span class="dot">•</span>
+                <span class="time">{{ video.createdAt | date:'MMM d, y, h:mm a' }}</span>
+            </div>
+
+            <div class="tags">
+                <span class="tag">{{ video.tags }}</span>
+            </div>
+            </div>
+
+        </a>
+    }
+    </div>
+  </div>
+</div>
