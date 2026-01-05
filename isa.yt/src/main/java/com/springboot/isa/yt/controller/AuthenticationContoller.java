@@ -97,24 +97,23 @@ public class AuthenticationContoller {
 	}
 	
 	@GetMapping("/verify")
-    public ResponseEntity<String> verifyUser(@RequestParam("token") String token, HttpServletResponse response) throws IOException
+    public void verifyUser(@RequestParam("token") String token, HttpServletResponse response) throws IOException
     {
 		String email = tokenUtils.getSubjectFromToken(token);
 		User user = userService.findByEmail(email);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                 .body("User not found.");
+        	response.sendRedirect("http://localhost:4200/error?reason=not_found");
+            return;
         }
         
         if (user.isEnabled()) {
-        	return ResponseEntity.status(HttpStatus.CONFLICT)
-        						.body("User already enabled");
+        	 response.sendRedirect("http://localhost:4200/login?alreadyVerified=true");
+             return;
         }
         
         user.setEnabled(true);
         userService.save(user);
-        response.sendRedirect("http://localhost:4200/login");
-        return null;
+        response.sendRedirect("http://localhost:4200/login?verified=true");
         						
     }
 }
