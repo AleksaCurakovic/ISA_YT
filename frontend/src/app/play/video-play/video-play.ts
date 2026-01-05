@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { VideoUpload } from '../../model/videoUpload'
+import { VideoUpload } from '../../model/videoUpload';
+import { CommentService } from '../service/comment-service';
+import { UploadService } from '../../upload/service/upload-service';
+import { ActivatedRoute } from '@angular/router';
+import { Comment } from '../../model/comment';
 
 @Component({
   selector: 'app-video-play',
@@ -8,23 +12,34 @@ import { VideoUpload } from '../../model/videoUpload'
   templateUrl: './video-play.html',
   styleUrl: './video-play.css',
 })
-export class VideoPlay {
-  video: VideoUpload = { id: 1,
-  title: 'Building a YouTube-Style Video Platform with Angular & Spring Boot',
-  description: `In this video we walk through the complete architecture of a modern
-YouTube-like platform using Angular on the frontend and Spring Boot on the backend.
-We cover video streaming, thumbnails, metadata, and performance tips.`,
-  author: 'Aleksa Curakovic',
-  tags: 'angular,spring-boot,video-streaming,web-development',
-  thumbnailUrl: 'https://picsum.photos/640/360',
-  videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
-  createdAt: new Date('2025-01-10T14:32:00'),
-  geoLocation: 'Belgrade, Serbia'}
+export class VideoPlay implements OnInit {
+  video!: VideoUpload
 
   suggestedVideos: VideoUpload[] = [];
+  comments: Comment[] = []
 
-  comments = [
-    { author: 'Alex', text: 'Great video!', time: '2 hours ago' },
-    { author: 'Maria', text: 'This helped a lot 👍', time: '1 day ago' }
-  ];
+  constructor(private commentService: CommentService, private uploadService: UploadService,
+              private route: ActivatedRoute
+  ){}
+
+  ngOnInit(): void{
+    this.route.queryParams.subscribe(params => {
+    const videoId = params['videoId'];
+    this.uploadService.getAllUploads().subscribe(videos => {
+      this.suggestedVideos = videos;
+    })
+    if (videoId) {
+      this.uploadService.getUpload(videoId).subscribe(video => {
+        this.video = video;
+      }, error => {
+        console.error('Failed to load video', error);
+      });
+      this.commentService.getVideoComments(videoId).subscribe(comments => {
+        this.comments = comments;
+      }, error => {
+        console.error('Failed to load video', error);
+      });
+    }
+  });
+  }
 }

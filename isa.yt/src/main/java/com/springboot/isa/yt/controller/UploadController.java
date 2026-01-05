@@ -38,4 +38,9 @@ public class UploadController {
     public ResponseEntity<List<VideoUpload>> getAllUploads(){
     	return ResponseEntity.ok(uploadService.findAll());
     }
+    
+    @GetMapping("/getUpload/{uploadId}")
+    public ResponseEntity<VideoUpload> getUpload(@PathVariable Long id){
+    	return ResponseEntity.ok(uploadService.findById(id));
+    }
 }

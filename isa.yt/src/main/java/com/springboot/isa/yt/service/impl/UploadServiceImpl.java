@@ -142,4 +142,9 @@ public class UploadServiceImpl implements UploadService {
 		return uploadRepository.findAll();
 	}
 
+	@Override
+	public VideoUpload findById(Long id) {
+		return uploadRepository.findById(id).orElseGet(null);
+	}
+
 }

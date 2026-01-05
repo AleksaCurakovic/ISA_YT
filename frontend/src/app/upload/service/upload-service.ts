@@ -22,4 +22,8 @@ export class UploadService  {
   getAllUploads(): Observable<VideoUpload[]> {
     return this.http.get<VideoUpload[]>(`${this.API_URL}/getAllUploads`);
   }
+
+  getUpload(id:number): Observable<VideoUpload> {
+    return this.http.get<VideoUpload>(`${this.API_URL}/getUpload/${id}`);
+  }
 }

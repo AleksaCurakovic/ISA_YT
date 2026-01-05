@@ -12,7 +12,7 @@
     <div class="grid">
       <!-- CARD 1 -->
     @for (video of videoUploads(); track video.id) {
-        <a class="card">
+        <a class="card" (click)="playVideo(video.id)">
 
             <div class="thumb">
             <img

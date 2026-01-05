@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { Auth } from '../service/auth';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { LoginRequest } from '../../model/loginRequest';
@@ -10,15 +10,28 @@ import { LoginRequest } from '../../model/loginRequest';
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class Login  {
+export class Login  implements OnInit {
   loginForm: FormGroup;
-  constructor(private authService: Auth, private formBuilder: FormBuilder) {
+  constructor(private authService: Auth, private formBuilder: FormBuilder,
+    private route: ActivatedRoute
+  ) {
     this.loginForm = this.formBuilder.group(
       {
         username: ['', [Validators.required]],
         password: ['', [Validators.required]]
       }
     );
+  }
+
+  ngOnInit(): void {
+     this.route.queryParams.subscribe(params => {
+    if (params['verified'] === 'true') {
+      alert('Account verified successfully!');
+    }
+    if (params['alreadyVerified'] === 'true') {
+      alert('Account arleady verified!');
+    }
+  });
   }
 
   login(): void {

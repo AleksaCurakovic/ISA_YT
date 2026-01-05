@@ -101,10 +101,6 @@ public class AuthenticationContoller {
     {
 		String email = tokenUtils.getSubjectFromToken(token);
 		User user = userService.findByEmail(email);
-        if (user == null) {
-        	response.sendRedirect("http://localhost:4200/error?reason=not_found");
-            return;
-        }
         
         if (user.isEnabled()) {
         	 response.sendRedirect("http://localhost:4200/login?alreadyVerified=true");
