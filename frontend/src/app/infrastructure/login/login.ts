@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { Auth } from '../service/auth';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { LoginRequest } from '../../model/loginRequest';
@@ -13,7 +13,7 @@ import { LoginRequest } from '../../model/loginRequest';
 export class Login  implements OnInit {
   loginForm: FormGroup;
   constructor(private authService: Auth, private formBuilder: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute, private router: Router
   ) {
     this.loginForm = this.formBuilder.group(
       {
@@ -24,13 +24,18 @@ export class Login  implements OnInit {
   }
 
   ngOnInit(): void {
-     this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe(params => {
     if (params['verified'] === 'true') {
       alert('Account verified successfully!');
     }
     if (params['alreadyVerified'] === 'true') {
       alert('Account arleady verified!');
     }
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {},
+      replaceUrl: true, 
+    });
   });
   }
 

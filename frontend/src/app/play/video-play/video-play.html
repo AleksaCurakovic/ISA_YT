@@ -4,45 +4,32 @@
       <!-- LEFT: Main Video Column -->
       <div class="video-column">
         <div class="player">
-          <video src="video.mp4" controls></video>
+          <video [src]="video.videoUrl" controls></video>
         </div>
 
         <!-- Video Info -->
         <div class="video-info">
           <!-- Video Title -->
-           @if (video)
-            {  
-                <div class="title">{{video.title}}</div>
-            }
-          @else{
-                 <div class="title">Video Title Here</div>
-          }
+            <div class="title">{{video.title}}</div>
 
           <!-- Author Row + Like Button -->
           <div class="meta-row-compact">
             <div class="channel">
               <div class="avatar">A</div>
               <div class="channel-info">
-                @if(video)
-                {<div class="channel-name">{{video.author}}</div>}
-                @else{<div class="channel-name">Author</div>}
+                <div class="channel-name">{{video.author}}</div>
               </div>
             </div>
 
             <div class="watch-actions">
-              <button class="btn btn-solid">👍 1.2K</button>
+              <button class="btn btn-solid" (click)="likeVideo()">👍 1.2K</button>
             </div>
           </div>
 
           <!-- Video Description with Views and Date -->
           <div class="description">
-              @if(video){
                 {{video.description}}
                 <div class="tiny">Views here{{ video.createdAt | date:'MMM d, y, h:mm a' }}</div>
-              }
-              @else{ Video Description
-              <div class="tiny">12,345 views • Jan 5, 2026</div>
-              }
           </div>
         </div>
 
@@ -50,7 +37,7 @@
         <div class="comments">
           <div class="comment-form">
             <input type="text" class="input comment-input" placeholder="Add a public comment..." />
-            <button class="btn btn-solid">Comment</button>
+            <button class="btn btn-solid" (click)="commentVideo()">Comment</button>
           </div>
         
           @for(comment of comments; track comment.id)

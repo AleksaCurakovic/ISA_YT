@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { VideoUpload } from '../../model/videoUpload';
 import { CommentService } from '../service/comment-service';
 import { UploadService } from '../../upload/service/upload-service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Comment } from '../../model/comment';
+import { Auth } from '../../infrastructure/service/auth'
 
 @Component({
   selector: 'app-video-play',
@@ -14,23 +15,26 @@ import { Comment } from '../../model/comment';
 })
 export class VideoPlay implements OnInit {
   video!: VideoUpload
-
-  suggestedVideos: VideoUpload[] = [];
+  loggedInUsername: string | null = null;
+  suggestedVideos: VideoUpload[] = []
   comments: Comment[] = []
 
   constructor(private commentService: CommentService, private uploadService: UploadService,
-              private route: ActivatedRoute
+              private route: ActivatedRoute, private authService: Auth, private router: Router
   ){}
 
   ngOnInit(): void{
+    this.authService.authState$.subscribe(username  => {
+      this.loggedInUsername = username;
+    })
     this.route.queryParams.subscribe(params => {
     const videoId = params['videoId'];
     this.uploadService.getAllUploads().subscribe(videos => {
-      this.suggestedVideos = videos;
+      this.suggestedVideos = videos
     })
     if (videoId) {
       this.uploadService.getUpload(videoId).subscribe(video => {
-        this.video = video;
+        this.video = video
       }, error => {
         console.error('Failed to load video', error);
       });
@@ -41,5 +45,21 @@ export class VideoPlay implements OnInit {
       });
     }
   });
+  }
+
+  likeVideo(): void {
+    if (!this.loggedInUsername)
+    {
+      this.router.navigate(['/login'])
+    }
+    //Like logic
+  }
+
+  commentVideo(): void {
+     if (!this.loggedInUsername)
+    {
+      this.router.navigate(['/login'])
+    }
+    //Comment logic
   }
 }
