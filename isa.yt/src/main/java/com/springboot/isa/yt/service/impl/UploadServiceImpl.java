@@ -43,7 +43,7 @@ public class UploadServiceImpl implements UploadService {
         this.root = Paths.get(rootDir).toAbsolutePath().normalize();
     }
 
-    @Transactional(timeout = 5)
+    @Transactional(rollbackFor=RuntimeException.class)
 	@Override
 	public VideoUpload save(UploadRequestDTO uploadRequest) throws RuntimeException {
     	 String thumbnailUrl = "";
@@ -63,7 +63,6 @@ public class UploadServiceImpl implements UploadService {
 	            videoUpload.setVideoUrl(videoUrl);
 	            videoUpload.setDuration(getVideoDurationSeconds(uploadRequest.getVideo()));
 	            
-	            //Thread.sleep(6000); uncomment for transaction
 
 	            return uploadRepository.save(videoUpload);
 
