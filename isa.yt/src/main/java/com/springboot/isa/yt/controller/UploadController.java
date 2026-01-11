@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.isa.yt.dto.UploadRequestDTO;
+import com.springboot.isa.yt.dto.VideoPreviewDTO;
 import com.springboot.isa.yt.model.VideoUpload;
 import com.springboot.isa.yt.service.UploadService;
 
@@ -35,12 +36,29 @@ public class UploadController {
     }
     
     @GetMapping("/getAllUploads")
-    public ResponseEntity<List<VideoUpload>> getAllUploads(){
-    	return ResponseEntity.ok(uploadService.findAll());
+    public ResponseEntity<List<VideoPreviewDTO>> getAllUploads(){
+    	List<VideoPreviewDTO> videoDTOs =
+    	        uploadService.findAll()
+    	            .stream()
+    	            .map(VideoPreviewDTO::new)  
+    	            .toList();                
+
+    	return ResponseEntity.ok(videoDTOs);   	
     }
     
     @GetMapping("/getUpload/{uploadId}")
-    public ResponseEntity<VideoUpload> getUpload(@PathVariable Long id){
-    	return ResponseEntity.ok(uploadService.findById(id));
+    public ResponseEntity<VideoUpload> getUpload(@PathVariable Long uploadId){
+    	return ResponseEntity.ok(uploadService.findById(uploadId));
+    }
+    
+    @GetMapping("/getUserUploads/{userName}")
+    public ResponseEntity<List<VideoPreviewDTO>> getUserUploads(@PathVariable String userName){
+    	List<VideoPreviewDTO> videoDTOs =
+    	        uploadService.findAllByAuthor(userName)
+    	            .stream()
+    	            .map(VideoPreviewDTO::new)  
+    	            .toList();                
+
+    	return ResponseEntity.ok(videoDTOs);   	
     }
 }

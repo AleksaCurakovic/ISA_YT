@@ -33,7 +33,7 @@ public class VideoUpload {
 	@Column(name = "thumbnail_url")
 	private String thumbnailUrl;
 	
-	@Column(name = "vide_url")
+	@Column(name = "video_url")
 	private String videoUrl;
 	
 	@Column(name = "created_at")
@@ -41,6 +41,39 @@ public class VideoUpload {
 	
 	@Column(name = "geo_location")
 	private String geoLocation;
+	
+	@Column(name = "views")
+	private int views;
+	
+	@Column(name = "likes")
+	private int likes;
+	
+	@Column(name = "duration")
+	private int duration;
+	
+	public int getDuration() {
+		return duration;
+	}
+
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
+
+	public int getViews() {
+		return views;
+	}
+
+	public void setViews(int views) {
+		this.views = views;
+	}
+
+	public int getLikes() {
+		return likes;
+	}
+
+	public void setLikes(int likes) {
+		this.likes = likes;
+	}
 
 	public String getAuthor() {
 		return author;

@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.springboot.isa.yt.dto.JwtAuthenticationRequestDTO;
+import com.springboot.isa.yt.dto.ProfileDTO;
 import com.springboot.isa.yt.dto.UserRequestDTO;
 import com.springboot.isa.yt.dto.UserTokenStateDTO;
 import com.springboot.isa.yt.model.User;
@@ -68,7 +70,8 @@ public class AuthenticationContoller {
 
 		User user = (User) authentication.getPrincipal();
 		if (!user.isEnabled()) {
-			return null;
+			return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(null);
 		}
 		String jwt = tokenUtils.generateToken(user.getUsername());
 		int expiresIn = tokenUtils.getExpiredIn();
@@ -112,4 +115,33 @@ public class AuthenticationContoller {
         response.sendRedirect("http://localhost:4200/login?verified=true");
         						
     }
+	
+	@GetMapping("/whoAreYou/{userName}")
+	public ProfileDTO whoAreYou(@PathVariable String userName){
+		User user = userService.findByUsername(userName);
+		ProfileDTO profile;
+		if (user != null)
+		{
+			profile = new ProfileDTO(user);
+		}
+		else {
+			profile = null;
+		}
+		return profile;
+	}
+	
+	@GetMapping("/whoAmI")
+	public ProfileDTO whoAmI(){
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		User user = (User) authentication.getPrincipal();
+		ProfileDTO profile;
+		if (user != null)
+		{
+			profile = new ProfileDTO(user);
+		}
+		else {
+			profile = null;
+		}
+		return profile;
+	}
 }

@@ -2,16 +2,10 @@
   <div class="container">
     <div class="topbar">
       <h1 class="headline">Home</h1>
-
-      <div class="search">
-        <span class="search-ico">🔎</span>
-        <input class="search-input" type="text" placeholder="Search YouTubic..." />
-      </div>
     </div>
-
     <div class="grid">
       <!-- CARD 1 -->
-    @for (video of videoUploads(); track video.id) {
+    @for (video of videoPreview(); track video.id) {
         <a class="card" (click)="playVideo(video.id)">
 
             <div class="thumb">
@@ -20,7 +14,7 @@
                 [src]= "'http://localhost:8080' + video.thumbnailUrl"
                 alt="thumbnail"
             />
-            <span class="duration">--:--</span>
+            <span class="duration">{{ getDurationLabel(video.duration)}}</span>
             </div>
 
             <div class="meta">
@@ -40,5 +34,4 @@
         </a>
     }
     </div>
-  </div>
 </div>

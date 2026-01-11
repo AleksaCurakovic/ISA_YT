@@ -1,15 +1,19 @@
 package com.springboot.isa.yt.service.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.mp4parser.IsoFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -57,6 +61,7 @@ public class UploadServiceImpl implements UploadService {
 	            videoUpload.setGeoLocation(uploadRequest.getGeoLocation());
 	            videoUpload.setThumbnailUrl(thumbnailUrl);
 	            videoUpload.setVideoUrl(videoUrl);
+	            videoUpload.setDuration(getVideoDurationSeconds(uploadRequest.getVideo()));
 	            
 	            //Thread.sleep(6000); uncomment for transaction
 
@@ -68,6 +73,23 @@ public class UploadServiceImpl implements UploadService {
 	            throw new RuntimeException("Upload failed; rolled back files", ex);
 	        }
 	}
+    
+    private int getVideoDurationSeconds(MultipartFile videoFile) throws IOException {
+    	File tempFile = File.createTempFile("video-upload-", ".mp4");
+        videoFile.transferTo(tempFile);
+
+        try (FileChannel fc = FileChannel.open(tempFile.toPath(), StandardOpenOption.READ);
+             IsoFile isoFile = new IsoFile(fc)) {
+
+            int duration =  (int) (isoFile.getMovieBox().getMovieHeaderBox().getDuration()
+                    / isoFile.getMovieBox().getMovieHeaderBox().getTimescale());
+
+            return duration;
+        } finally {
+            tempFile.delete(); 
+        }
+    }
+ 
     
     @Cacheable(value = "thumbnails", key = "#filename")
     @Override
@@ -145,6 +167,11 @@ public class UploadServiceImpl implements UploadService {
 	@Override
 	public VideoUpload findById(Long id) {
 		return uploadRepository.findById(id).orElseGet(null);
+	}
+
+	@Override
+	public List<VideoUpload> findAllByAuthor(String author) {
+		return uploadRepository.findAllByAuthor(author);
 	}
 
 }

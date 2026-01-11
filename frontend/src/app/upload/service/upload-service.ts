@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { VideoUpload } from '../../model/videoUpload';
+import { VideoPreview } from '../../model/videoPreview';
 import { HttpEvent } from '@angular/common/http';
 
 
@@ -19,11 +20,15 @@ export class UploadService  {
     })
   }
 
-  getAllUploads(): Observable<VideoUpload[]> {
-    return this.http.get<VideoUpload[]>(`${this.API_URL}/getAllUploads`);
+  getAllUploads(): Observable<VideoPreview[]> {
+    return this.http.get<VideoPreview[]>(`${this.API_URL}/getAllUploads`);
   }
 
   getUpload(id:number): Observable<VideoUpload> {
     return this.http.get<VideoUpload>(`${this.API_URL}/getUpload/${id}`);
+  }
+
+  getUserUploads(userName: string): Observable<VideoPreview[]> {
+    return this.http.get<VideoPreview[]>(`${this.API_URL}/getUserUploads/${userName}`);
   }
 }

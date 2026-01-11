@@ -7,7 +7,8 @@ import { jwtDecode } from 'jwt-decode';
 import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-
+import { ToastrService } from 'ngx-toastr';
+import { Profile } from '../../model/profile'
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,7 @@ export class Auth {
   private readonly API_URL = 'http://localhost:8080';
   private authStateSubject = new BehaviorSubject<string | null>(this.decodeToken());
   public authState$ = this.authStateSubject.asObservable();
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private toastr: ToastrService) { }
 
   login(payload: LoginRequest): void {
     this.http
@@ -25,6 +26,7 @@ export class Auth {
         next: (res) => {
           this.storeSession(res);
           this.authStateSubject.next(this.decodeToken());
+          this.toastr.success('Login Successful!')
           this.router.navigate(['/']);
           console.log('Login successful');
         },
@@ -39,6 +41,7 @@ export class Auth {
       .post<string>(`${this.API_URL}/signup`, payload)
       .subscribe({
         next: (res) => {
+          this.toastr.info('Verification email sent')
           this.router.navigate(['/login']);
           console.log(res);
         },
@@ -65,5 +68,15 @@ export class Auth {
   logout(): void {
     localStorage.removeItem('jwt');
     this.authStateSubject.next(null);
+    this.toastr.success('Successfully logged out')
+    this.router.navigate(['/home'])
+  }
+
+  whoAmI(): Observable<Profile> {
+    return this.http.get<Profile>(`${this.API_URL}/whoAmI`)
+  }
+
+  whoAreYou(userName: string): Observable<Profile> {
+    return this.http.get<Profile>(`${this.API_URL}/whoAreYou/${userName}`)
   }
 }

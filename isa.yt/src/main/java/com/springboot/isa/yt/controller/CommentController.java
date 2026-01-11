@@ -18,7 +18,7 @@ public class CommentController {
 	private CommentService commentService;
 	
 	@GetMapping("/comments/{videoId}")
-	public ResponseEntity<List<Comment>> getVideoComments(@PathVariable Long id){
-		return ResponseEntity.ok(commentService.findByVideoUploadId(id));
+	public ResponseEntity<List<Comment>> getVideoComments(@PathVariable Long videoId){
+		return ResponseEntity.ok(commentService.findByVideoUploadId(videoId));
 	}
 }

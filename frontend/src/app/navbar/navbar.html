@@ -11,7 +11,7 @@
     @else{
       <a class="btn btn-outline" routerLink="/upload">Upload video</a>
       <a class="btn btn-solid" (click)="logout()">Logout</a>
-      <span class="username">{{ loggedInUsername }}</span>
+      <a class="username"  [routerLink]="['/profile']" [queryParams]="{ userName: loggedInUsername }">{{ loggedInUsername }}</a>
     }
   </div>
 </nav>

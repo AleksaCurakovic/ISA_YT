@@ -12,6 +12,8 @@ import { UploadService } from '../service/upload-service';
 import { ChangeDetectorRef } from '@angular/core';
 import { HttpEventType, HttpErrorResponse } from '@angular/common/http';
 import { Auth } from '../../infrastructure/service/auth';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 
 function requiredFile(): ValidatorFn {
@@ -73,8 +75,8 @@ function getVideoDurationSeconds(file: File): Promise<number> {
 })
 export class VideoUpload implements OnDestroy {
   videoForm: FormGroup;
-  private readonly MAX_THUMB_BYTES = 4_000_000;      
-  private readonly MAX_VIDEO_BYTES = 200_000_000;  
+  private readonly MAX_THUMB_BYTES = 4_194_304;      
+  private readonly MAX_VIDEO_BYTES = 209_715_200;  
   thumbnailPreviewUrl: string | null = null;
   videoPreviewUrl: string | null = null;
   videoDurationSec: number | null = null;
@@ -87,7 +89,7 @@ export class VideoUpload implements OnDestroy {
   loggedInUsername: string | null = null;
   
   constructor(private uploadService: UploadService, private formBuilder: FormBuilder, private cdr: ChangeDetectorRef,
-    private authService: Auth
+    private authService: Auth, private toastr: ToastrService, private router: Router
   ) {
     this.videoForm = this.formBuilder.group({
       title: ['', [Validators.required, Validators.maxLength(100)]],
@@ -181,6 +183,8 @@ export class VideoUpload implements OnDestroy {
             this.isUploading = false;
             this.uploadFinished = true;
             console.log('Uploaded:', event.body);
+            this.toastr.success('Video uploaded')
+            this.router.navigate(['/home'])
           }
           this.cdr.markForCheck();
         },
@@ -188,6 +192,7 @@ export class VideoUpload implements OnDestroy {
           this.isUploading = false;
           this.uploadError =
             err.error?.message || (typeof err.error === 'string' ? err.error : 'Upload failed');
+          this.toastr.error('Video upload failed')
         },
       });
 
@@ -200,12 +205,48 @@ export class VideoUpload implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-  if (this.thumbnailPreviewUrl) {
-    URL.revokeObjectURL(this.thumbnailPreviewUrl);
+    if (this.thumbnailPreviewUrl) {
+      URL.revokeObjectURL(this.thumbnailPreviewUrl);
+    }
+    if (this.videoPreviewUrl) {
+      URL.revokeObjectURL(this.videoPreviewUrl);
+    }
   }
-  if (this.videoPreviewUrl) {
-    URL.revokeObjectURL(this.videoPreviewUrl);
+
+  resetForm(): void {
+    this.videoForm.reset({
+      title: '',
+      description: '',
+      tags: '',
+      geoLocation: '',
+      thumbnailFile: null,
+      videoFile: null
+    });
+
+    // Reset file previews
+    if (this.thumbnailPreviewUrl) {
+      URL.revokeObjectURL(this.thumbnailPreviewUrl);
+      this.thumbnailPreviewUrl = null;
+    }
+
+    if (this.videoPreviewUrl) {
+      URL.revokeObjectURL(this.videoPreviewUrl);
+      this.videoPreviewUrl = null;
+    }
+
+    // Reset UI metadata
+    this.videoDurationSec = null;
+    this.videoFileName = '—';
+    this.videoFileSize = '—';
+    this.uploadPct = 0;
+    this.isUploading = false;
+    this.uploadFinished = false;
+    this.uploadError = null;
+
+    // Clear validation state
+    this.videoForm.markAsPristine();
+    this.videoForm.markAsUntouched();
+    this.toastr.info('Form reset')
   }
-}
 
 }

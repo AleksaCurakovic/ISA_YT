@@ -3,6 +3,7 @@ import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { Auth } from '../service/auth';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { LoginRequest } from '../../model/loginRequest';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ import { LoginRequest } from '../../model/loginRequest';
 export class Login  implements OnInit {
   loginForm: FormGroup;
   constructor(private authService: Auth, private formBuilder: FormBuilder,
-    private route: ActivatedRoute, private router: Router
+    private route: ActivatedRoute, private router: Router, private toastr: ToastrService
   ) {
     this.loginForm = this.formBuilder.group(
       {
@@ -26,10 +27,10 @@ export class Login  implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
     if (params['verified'] === 'true') {
-      alert('Account verified successfully!');
+      this.toastr.success('Account verified successfully!');
     }
     if (params['alreadyVerified'] === 'true') {
-      alert('Account arleady verified!');
+      this.toastr.warning('Account arleady verified!');
     }
     this.router.navigate([], {
       relativeTo: this.route,

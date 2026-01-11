@@ -80,9 +80,12 @@ public class WebSecurityConfig {
 				.requestMatchers("/signup",
 						"/login",
 						"/verify",
-						"/upload",
+						"/getUpload/**",
+						"/comments/**",
 						"/uploads/**",
-						"/getAllUploads").permitAll()
+						"/getAllUploads",
+						"/whoAreYou/**",
+						"/getUserUploads/**").permitAll()
 				.anyRequest().authenticated());
 		
 		http.cors(cors -> {});

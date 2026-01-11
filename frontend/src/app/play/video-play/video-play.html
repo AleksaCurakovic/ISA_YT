@@ -1,35 +1,36 @@
 <div class="page">
+  @if (video()) {
   <div class="card">
     <div class="watch-grid">
       <!-- LEFT: Main Video Column -->
       <div class="video-column">
         <div class="player">
-          <video [src]="video.videoUrl" controls></video>
+          <video [src]="'http://localhost:8080' + video()!.videoUrl" controls></video>
         </div>
 
         <!-- Video Info -->
         <div class="video-info">
           <!-- Video Title -->
-            <div class="title">{{video.title}}</div>
+            <div class="title">{{video()!.title}}</div>
 
           <!-- Author Row + Like Button -->
           <div class="meta-row-compact">
             <div class="channel">
-              <div class="avatar">A</div>
+              <a class="avatar" [routerLink]="['/profile']" [queryParams]="{ userName: video()!.author }">{{video()!.author.charAt(0)}}</a>
               <div class="channel-info">
-                <div class="channel-name">{{video.author}}</div>
+                <a class="channel-name" [routerLink]="['/profile']" [queryParams]="{ userName: video()!.author }">{{video()!.author}}</a>
               </div>
             </div>
 
             <div class="watch-actions">
-              <button class="btn btn-solid" (click)="likeVideo()">👍 1.2K</button>
+              <button class="btn btn-solid" (click)="likeVideo()">👍 {{video()!.likes}}</button>
             </div>
           </div>
 
           <!-- Video Description with Views and Date -->
           <div class="description">
-                {{video.description}}
-                <div class="tiny">Views here{{ video.createdAt | date:'MMM d, y, h:mm a' }}</div>
+            <div class="tiny">{{video()!.views}} Views  • {{ video()!.createdAt | date:'MMM d, y, h:mm a' }}</div>
+                {{video()!.description}}
           </div>
         </div>
 
@@ -44,7 +45,7 @@
          { <div class="comment-item">
             <div class="avatar">U</div>
             <div>
-              <div class="comment-meta">{{comment.authorUsername}}</div>
+              <div class="comment-meta" [routerLink]="['/profile']" [queryParams]="{ userName: video()!.author }">{{comment.authorUsername}}</div>
               <div class="comment-text">{{comment.content}}</div>
             </div>
           </div>
@@ -57,17 +58,31 @@
         <div class="side-title">Up next</div>
         @for(suggestedVideo of suggestedVideos; track suggestedVideo.id)
         {
-            <div class="suggestion">
-                <div class="suggest-thumb">
-                    <img src="thumb1.jpg" alt="Video thumbnail">
+            <div class="suggest-card" (click)="playSuggestedVideo(suggestedVideo.id)">
+
+              <div class="suggest-thumb">
+                <img [src]="'http://localhost:8080' + suggestedVideo.thumbnailUrl">
+                <span class="suggest-duration">{{ getDurationLabel(suggestedVideo.duration)}}</span>
+              </div>
+
+              <div class="suggest-meta">
+                <div class="suggest-title">{{ suggestedVideo.title }}</div>
+
+                <div class="suggest-sub">
+                  <span>{{ suggestedVideo.author }}</span>
+                  <span class="dot">•</span>
+                  <span>{{ suggestedVideo.createdAt | date:'MMM d, y' }}</span>
                 </div>
-                <div class="suggest-body">
-                    <div class="suggest-title">{{suggestedVideo.title}}</div>
-                    <div class="suggest-details">{{suggestedVideo.author}}</div>
+
+                <div class="suggest-tags">
+                  <span class="suggest-tag">{{ suggestedVideo.tags }}</span>
                 </div>
+              </div>
+
             </div>
         }
       </div>
     </div>
   </div>
+}
 </div>

@@ -5,7 +5,6 @@ import { ReactiveFormsModule, FormBuilder, Validators,
         AbstractControl, ValidationErrors, ValidatorFn, FormGroup } from '@angular/forms';
 import { RegisterRequest } from '../../model/registerRequest';
 
-
 export const passwordMatchValidator: ValidatorFn =
   (control: AbstractControl): ValidationErrors | null => {
 

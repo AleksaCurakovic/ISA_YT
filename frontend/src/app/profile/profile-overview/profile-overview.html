@@ -1,0 +1,105 @@
+<div class="profile">
+  <div class="container">
+
+    @if (profile()) {
+      <!-- Header -->
+      <div class="profile-header">
+        <div class="avatar">
+          {{ profile()!.userName.charAt(0).toUpperCase() }}
+        </div>
+
+        <div class="user-info">
+          <h1 class="username">{{ profile()!.userName }}</h1>
+          <div class="fullname">
+            {{ profile()!.firstName }} {{ profile()!.lastName }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button
+          class="tab"
+          [class.active]="activeTab === 'videos'"
+          (click)="activeTab = 'videos'">
+          Videos
+        </button>
+
+        <button
+          class="tab"
+          [class.active]="activeTab === 'about'"
+          (click)="activeTab = 'about'">
+          About
+        </button>
+      </div>
+    }
+
+    <!-- VIDEOS TAB -->
+    @if (activeTab === 'videos') {
+      <div class="grid">
+        @for (video of videos; track video.id) {
+          <a class="card" (click)="playVideo(video.id)">
+            <div class="thumb">
+              <img
+                class="thumb-img"
+                [src]="'http://localhost:8080' + video.thumbnailUrl"
+                alt="thumbnail"
+              />
+              <span class="duration">{{getDurationLabel(video.duration)}}</span>
+            </div>
+
+            <div class="meta">
+              <div class="video-title">{{ video.title }}</div>
+
+              <div class="sub">
+                <span class="author">{{ video.author }}</span>
+                <span class="dot">•</span>
+                <span class="time">
+                  {{ video.createdAt | date:'MMM d, y, h:mm a' }}
+                </span>
+              </div>
+
+              <div class="tags">
+                <span class="tag">{{ video.tags }}</span>
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+    }
+
+    <!-- ABOUT TAB -->
+    @if (activeTab === 'about' && profile()) {
+      <div class="about-panel">
+        <div class="about-card">
+
+          <div class="about-row">
+            <span class="label">Username</span>
+            <span class="value">@{{ profile()!.userName }}</span>
+          </div>
+
+          <div class="about-row">
+            <span class="label">Name</span>
+            <span class="value">
+              {{ profile()!.firstName }} {{ profile()!.lastName }}
+            </span>
+          </div>
+
+          <div class="about-row">
+            <span class="label">Email</span>
+            <span class="value">{{ profile()!.email }}</span>
+          </div>
+
+          @if (profile()!.address) {
+            <div class="about-row">
+              <span class="label">Location</span>
+              <span class="value">{{ profile()!.address }}</span>
+            </div>
+          }
+
+        </div>
+      </div>
+    }
+
+  </div>
+</div>

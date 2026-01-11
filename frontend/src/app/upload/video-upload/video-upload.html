@@ -125,8 +125,8 @@
         </div>
 
         <div class="actions">
-          <button class="btn btn-outline" type="button">Cancel</button>
-          <button class="btn btn-solid" type="submit" [disabled]="isUploading">Upload</button>
+          <button class="btn btn-outline" type="reset" [disabled]="isUploading || !loggedInUsername" (click)="resetForm()">Cancel</button>
+          <button class="btn btn-solid" type="submit" [disabled]="isUploading || !loggedInUsername">Upload</button>
         </div>
 
       </form>
@@ -151,7 +151,7 @@
             </div>
             <div class="side-line">
               <span class="k">Author</span>
-              <span class="v">{{videoForm.get('author')?.value || '—'}}</span>
+              <span class="v">{{loggedInUsername || '—'}}</span>
             </div>
             <div class="side-line">
               <span class="k">Tags</span>

@@ -8,4 +8,6 @@ export interface VideoUpload {
     videoUrl: string;
     createdAt: Date;
     geoLocation: string;
+    views: number;
+    likes: number;
 }
