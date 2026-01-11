@@ -108,8 +108,36 @@
 .comment-input { flex:1; background:#0f0f0f; border:1px solid #2b2b2b; border-radius:12px; padding:12px; color:#fff; font-size:14px; }
 
 .comment-item { display:flex; gap:10px; padding:10px 0; border-bottom:1px solid #1e1e1e; }
-.comment-meta { font-size:12px; color:#bfbfbf; }
 .comment-text { font-size:13px; color:#e6e6e6; }
+
+.comment-body {
+  display: grid;
+  gap: 4px;
+}
+
+.comment-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #bfbfbf;
+  text-decoration: none;
+}
+
+.comment-author {
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.comment-time {
+  color: #9a9a9a;
+}
+
+.dot {
+  opacity: 0.6;
+}
 
 /* Suggested Videos */
 .suggestions {

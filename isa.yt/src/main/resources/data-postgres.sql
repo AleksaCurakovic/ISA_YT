@@ -25,3 +25,8 @@ VALUES (
     100,
     17
 );
+
+INSERT INTO COMMENTS (content, author_username, video_upload_id, created_at) VALUES
+('Great explanation!', 'milos', 1, NOW()),
+('Loved the editing 🔥', 'jana', 1, NOW()),
+('Waiting for part 2!', 'nikola', 1, NOW());

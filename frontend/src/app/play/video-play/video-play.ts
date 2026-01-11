@@ -19,8 +19,8 @@ import { ToastrService } from 'ngx-toastr';
 export class VideoPlay implements OnInit {
   video = signal<VideoUpload | null>(null)
   loggedInUsername: string | null = null;
-  suggestedVideos: VideoPreview[] = []
-  comments: Comment[] = []
+  suggestedVideos = signal<VideoPreview[]>([]);
+  comments =  signal<Comment[]>([]);
 
   constructor(private commentService: CommentService, private uploadService: UploadService,
               private route: ActivatedRoute, private authService: Auth, private router: Router,
@@ -34,8 +34,7 @@ export class VideoPlay implements OnInit {
     this.route.queryParams.subscribe(params => {
     const videoId = params['videoId'];
     this.uploadService.getAllUploads().subscribe(videos => {
-      this.suggestedVideos = videos
-      this.suggestedVideos = this.suggestedVideos.filter(video => video.id != videoId)
+      this.suggestedVideos.set(videos.filter(video => video.id != videoId))
     })
     if (videoId) {
       this.uploadService.getUpload(videoId).subscribe(video => {
@@ -44,7 +43,7 @@ export class VideoPlay implements OnInit {
         console.error('Failed to load video', error);
       });
       this.commentService.getVideoComments(videoId).subscribe(comments => {
-        this.comments = comments;
+        this.comments.set(comments);
       }, error => {
         console.error('Failed to load video', error);
       });
