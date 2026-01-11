@@ -32,6 +32,7 @@ export class Auth {
         },
         error: (err) => {
           console.error('Login failed', err);
+          this.toastr.error('Incorrect or unverified account details')
         }
       });
   }
@@ -47,6 +48,7 @@ export class Auth {
         },
         error: (err) => {
           console.error('Registration failed', err);
+          this.toastr.error('Username or email already in use')
         }
       });
   }
