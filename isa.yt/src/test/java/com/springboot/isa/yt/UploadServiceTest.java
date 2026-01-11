@@ -1,16 +1,11 @@
 package com.springboot.isa.yt;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionTimedOutException;
-import org.springframework.transaction.support.TransactionTemplate;
-
 import com.springboot.isa.yt.dto.UploadRequestDTO;
 import com.springboot.isa.yt.service.UploadService;
 
@@ -18,9 +13,6 @@ import com.springboot.isa.yt.service.UploadService;
 public class UploadServiceTest {
 	@Autowired
     private UploadService uploadService;
-
-    @Autowired
-    private PlatformTransactionManager transactionManager;
 
      
 	@Test
@@ -49,14 +41,9 @@ public class UploadServiceTest {
 		 request.setThumbnail(thumbnail);
 		 request.setVideo(video);
 		
-		 TransactionTemplate txTemplate = new TransactionTemplate(transactionManager);
-	
-	    RuntimeException ex = assertThrows(RuntimeException.class, () -> {
-	        txTemplate.execute(status -> {
-	        	uploadService.save(request);
-	            return null;
-	        });
-	    });
+		 RuntimeException ex = assertThrows(RuntimeException.class, () -> {
+		        uploadService.save(request);
+		    });
 	    
 	        
      }
