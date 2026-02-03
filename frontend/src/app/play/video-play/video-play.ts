@@ -21,6 +21,8 @@ export class VideoPlay implements OnInit {
   loggedInUsername: string | null = null;
   suggestedVideos = signal<VideoPreview[]>([]);
   comments =  signal<Comment[]>([]);
+  currentCommentPage = 0;
+  commentPageSize = 10;
 
   constructor(private commentService: CommentService, private uploadService: UploadService,
               private route: ActivatedRoute, private authService: Auth, private router: Router,
@@ -42,13 +44,22 @@ export class VideoPlay implements OnInit {
       }, error => {
         console.error('Failed to load video', error);
       });
-      this.commentService.getVideoComments(videoId).subscribe(comments => {
+      this.commentService.getVideoComments(videoId, this.currentCommentPage, this.commentPageSize).subscribe(comments => {
         this.comments.set(comments);
       }, error => {
         console.error('Failed to load video', error);
       });
     }
   });
+  }
+
+  nextcCommentsPage(page: number): void {
+    this.currentCommentPage += 1;
+    this.commentService.getVideoComments(this.video()!.id, this.currentCommentPage, this.commentPageSize).subscribe(comments => {
+            this.comments.set(comments);
+          }, error => {
+            console.error('Failed to load video', error);
+    });
   }
 
   likeVideo(): void {

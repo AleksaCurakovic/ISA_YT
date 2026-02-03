@@ -1,8 +1,9 @@
 package com.springboot.isa.yt.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.springboot.isa.yt.model.Comment;
@@ -16,8 +17,10 @@ public class CommentServiceImpl implements CommentService {
 	private CommentRepository commentRepository;
 
 	@Override
-	public List<Comment> findByVideoUploadId(Long id) {
-		return  commentRepository.findByVideoUploadId(id);
+	@Cacheable(value = "comments_paged", 
+    	key = "{#id, #pageable.pageNumber, #pageable.pageSize}")
+	public Page<Comment> findByVideoUploadId(Long id, Pageable pageable) {
+		return commentRepository.findByVideoUploadId(id, pageable);
 	}
 
 	@Override

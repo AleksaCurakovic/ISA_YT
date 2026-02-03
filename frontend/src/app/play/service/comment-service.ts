@@ -10,7 +10,7 @@ export class CommentService {
   private readonly API_URL = 'http://localhost:8080';
   constructor(private http: HttpClient){}
 
-  getVideoComments(id: number): Observable<Comment[]>{
-    return this.http.get<Comment[]>(`${this.API_URL}/comments/${id}`)
+  getVideoComments(id: number, page: number, size: number): Observable<Comment[]>{
+    return this.http.get<Comment[]>(`${this.API_URL}/comments/${id}?page=${page}&size=${size}`);
   }
 }

@@ -62,6 +62,13 @@ VALUES (
     17
 );
 
+INSERT INTO USER_ROLE VALUES 
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5);
+
 INSERT INTO COMMENTS (content, author_username, video_upload_id, created_at) VALUES
 ('Great explanation!', 'milos', 1, NOW()),
 ('Loved the editing 🔥', 'jana', 1, NOW()),

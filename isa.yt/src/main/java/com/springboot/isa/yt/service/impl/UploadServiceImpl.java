@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,7 +42,6 @@ public class UploadServiceImpl implements UploadService {
         this.root = Paths.get(rootDir).toAbsolutePath().normalize();
     }
 
-    @Transactional(rollbackFor=RuntimeException.class)
 	@Override
 	public VideoUpload save(UploadRequestDTO uploadRequest) throws RuntimeException {
     	 String thumbnailUrl = "";
