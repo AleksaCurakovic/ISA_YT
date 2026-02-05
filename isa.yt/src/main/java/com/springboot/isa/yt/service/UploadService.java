@@ -12,4 +12,5 @@ public interface UploadService {
 	byte[] getThumbnail(String filname);
 	VideoUpload findById(Long id);
 	List<VideoUpload> findAllByAuthor(String author);
+	VideoUpload incremenetViewCount(Long id);
 }

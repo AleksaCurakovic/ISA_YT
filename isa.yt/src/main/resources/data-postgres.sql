@@ -57,8 +57,8 @@ VALUES (
     'cool, lame, thrilling',
     '/uploads/thumbnails/50078467-bc58-4dcd-91c9-ac83fd4eb099.jpg',
     '/uploads/videos/0153c302-5e78-477a-81f6-bc999a2bbd9e.mp4',
-    492,
-    100,
+    0,
+    0,
     17
 );
 

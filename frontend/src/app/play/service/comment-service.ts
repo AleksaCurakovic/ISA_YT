@@ -13,4 +13,8 @@ export class CommentService {
   getVideoComments(id: number, page: number, size: number): Observable<Comment[]>{
     return this.http.get<Comment[]>(`${this.API_URL}/comments/${id}?page=${page}&size=${size}`);
   }
+
+  commentOnVideo(comment: Comment): Observable<Comment>{
+    return this.http.post<Comment>(`${this.API_URL}/comment`, comment);
+  }
 }

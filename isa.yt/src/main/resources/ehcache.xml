@@ -4,12 +4,12 @@
   xsi:schemaLocation="http://www.ehcache.org/v3
     http://www.ehcache.org/schema/ehcache-core-3.7.xsd">
 
-  <!-- Default cache template (RAM-only) -->
   <cache-template name="default">
     <expiry>
-      <!-- Keep thumbnails in cache for 30 minutes -->
       <ttl unit="minutes">30</ttl>
     </expiry>
+    
+   
 
     <listeners>
       <listener>
@@ -24,15 +24,19 @@
     </listeners>
 
     <resources>
-      <!-- RAM only: keep up to 500 entries (thumbnails) -->
       <heap unit="entries">500</heap>
     </resources>
   </cache-template>
 
-  <!-- Cache for thumbnail bytes -->
+
   <cache alias="thumbnails" uses-template="default">
     <key-type>java.lang.String</key-type>
-    <value-type>[B</value-type> <!-- byte[] -->
+    <value-type>[B</value-type> 
+  </cache>
+  
+   <cache alias="comments" uses-template="default">
+    <key-type>java.lang.Long</key-type> 
+    <value-type>com.springboot.isa.yt.model.Comment</value-type>
   </cache>
 
 </config>

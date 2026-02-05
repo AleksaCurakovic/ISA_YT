@@ -47,8 +47,9 @@ public class CommentController {
 	@PostMapping("/comment")
 	public ResponseEntity<Comment> createComment(@RequestBody Comment comment){
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		var config = rateLimiterRegistry.rateLimiter("commentLimit").getRateLimiterConfig();
 		User user = (User) authentication.getPrincipal();
-		RateLimiter perUserLimiter = rateLimiterRegistry.rateLimiter("comment:" + user.getUsername(), "commentLimit");
+		RateLimiter perUserLimiter = rateLimiterRegistry.rateLimiter("comment:" + user.getUsername(), config);
 		try {
 		    RateLimiter.waitForPermission(perUserLimiter); 
 		    return ResponseEntity.ok(commentService.save(comment));

@@ -37,7 +37,7 @@
         <!-- Comments Section -->
         <div class="comments">
           <div class="comment-form">
-            <input type="text" class="input comment-input" placeholder="Add a public comment..." />
+            <input type="text" class="input comment-input" placeholder="Add a public comment..."  [(ngModel)]="commentContent" />
             <button class="btn btn-solid" (click)="commentVideo()">Comment</button>
           </div>
         

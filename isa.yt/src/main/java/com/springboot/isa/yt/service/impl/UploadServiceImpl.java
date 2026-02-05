@@ -26,6 +26,8 @@ import com.springboot.isa.yt.model.VideoUpload;
 import com.springboot.isa.yt.repository.UploadRepository;
 import com.springboot.isa.yt.service.UploadService;
 
+import jakarta.transaction.Transactional;
+
 
 
 @Service
@@ -169,6 +171,14 @@ public class UploadServiceImpl implements UploadService {
 	@Override
 	public List<VideoUpload> findAllByAuthor(String author) {
 		return uploadRepository.findAllByAuthor(author);
+	}
+
+	@Override
+	@Transactional
+	public VideoUpload incremenetViewCount(Long id) {
+		VideoUpload vu = uploadRepository.findByIdForUpdate(id);
+		vu.setViews(vu.getViews() + 1);
+		return uploadRepository.save(vu);
 	}
 
 }

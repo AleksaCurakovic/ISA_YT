@@ -8,11 +8,12 @@ import { Comment } from '../../model/comment';
 import { Auth } from '../../infrastructure/service/auth'
 import { VideoPreview } from '../../model/videoPreview';
 import { ToastrService } from 'ngx-toastr';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-video-play',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './video-play.html',
   styleUrl: './video-play.css',
 })
@@ -23,6 +24,7 @@ export class VideoPlay implements OnInit {
   comments =  signal<Comment[]>([]);
   currentCommentPage = 0;
   commentPageSize = 10;
+  commentContent: string = '';
 
   constructor(private commentService: CommentService, private uploadService: UploadService,
               private route: ActivatedRoute, private authService: Auth, private router: Router,
@@ -35,10 +37,10 @@ export class VideoPlay implements OnInit {
     })
     this.route.queryParams.subscribe(params => {
     const videoId = params['videoId'];
-    this.uploadService.getAllUploads().subscribe(videos => {
-      this.suggestedVideos.set(videos.filter(video => video.id != videoId))
-    })
-    if (videoId) {
+    if (!videoId) return
+      this.uploadService.getAllUploads().subscribe(videos => {
+        this.suggestedVideos.set(videos.filter(video => video.id != videoId))
+      })
       this.uploadService.getUpload(videoId).subscribe(video => {
         this.video.set(video)
       }, error => {
@@ -49,11 +51,10 @@ export class VideoPlay implements OnInit {
       }, error => {
         console.error('Failed to load video', error);
       });
-    }
   });
   }
 
-  nextcCommentsPage(page: number): void {
+  nextCommentsPage(page: number): void {
     this.currentCommentPage += 1;
     this.commentService.getVideoComments(this.video()!.id, this.currentCommentPage, this.commentPageSize).subscribe(comments => {
             this.comments.set(comments);
@@ -76,8 +77,15 @@ export class VideoPlay implements OnInit {
     {
       this.toastr.error('Please login first to comment')
       this.router.navigate(['/login'])
-    }
-    //Comment logic
+    };
+    const comment = {} as Comment;
+    comment.content = this.commentContent;
+    comment.authorUsername = this.loggedInUsername!;
+    comment.videoUploadId = this.video()!.id;
+    comment.createdAt = new Date();
+    this.commentContent = '';
+    this.comments.update(comments => [comment, ...comments]);
+    this.commentService.commentOnVideo(comment).subscribe();
   }
 
   playSuggestedVideo(id: number): void {
