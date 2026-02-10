@@ -110,10 +110,14 @@
 		    <version>1.9.56</version>
 		</dependency>
 		<dependency>
-		    <groupId>com.h2database</groupId>
-		    <artifactId>h2</artifactId>
-		    <scope>test</scope>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-amqp</artifactId>
 		</dependency>
+		<dependency>
+	        <groupId>com.google.protobuf</groupId>
+	        <artifactId>protobuf-java</artifactId>
+	        <version>3.25.1</version> <!-- Proveri najnoviju verziju ako želiš -->
+	    </dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -121,6 +125,22 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+	            <groupId>org.xolstice.maven.plugins</groupId>
+	            <artifactId>protobuf-maven-plugin</artifactId>
+	            <version>0.6.1</version>
+	            <configuration>
+	                 <protocArtifact>com.google.protobuf:protoc:3.25.1:exe:windows-x86_64</protocArtifact>
+	                 <protoSourceRoot>src/main/java/com/springboot/isa/yt/messaging</protoSourceRoot> 
+	            </configuration>
+	            <executions>
+	                <execution>
+	                    <goals>
+	                        <goal>compile</goal>
+	                    </goals>
+	                </execution>
+	            </executions>
+	        </plugin>
 		</plugins>
 	</build>
 

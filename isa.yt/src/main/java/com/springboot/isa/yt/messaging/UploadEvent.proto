@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option java_package = "com.springboot.isa.yt.messaging";
+option java_outer_classname = "UploadEventProto";
+
+message UploadEventMsg {
+  string title = 1;
+  string author = 2;
+  string description = 3;
+  string tags = 4; 
+  int64 createdAt = 5; 
+  int32 views = 6;
+}

@@ -22,6 +22,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.springboot.isa.yt.dto.UploadRequestDTO;
+import com.springboot.isa.yt.messaging.Producer;
+import com.springboot.isa.yt.messaging.UploadEvent;
 import com.springboot.isa.yt.model.VideoUpload;
 import com.springboot.isa.yt.repository.UploadRepository;
 import com.springboot.isa.yt.service.UploadService;
@@ -38,6 +40,9 @@ public class UploadServiceImpl implements UploadService {
 	private UploadRepository uploadRepository;
 	
 	private final Path root; 
+	
+	@Autowired
+	private Producer producer;
 
     @Autowired
     public UploadServiceImpl(@Value("${app.storage.root:uploads}") String rootDir) {
@@ -63,6 +68,9 @@ public class UploadServiceImpl implements UploadService {
 	            videoUpload.setVideoUrl(videoUrl);
 	            videoUpload.setDuration(getVideoDurationSeconds(uploadRequest.getVideo()));
 	            
+	            UploadEvent uploadEvent = new UploadEvent(videoUpload);
+	            producer.sendToJson("jsonQueue", uploadEvent);
+	            producer.sendToProtoBuf("protoQueue", uploadEvent);
 
 	            return uploadRepository.save(videoUpload);
 

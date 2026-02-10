@@ -13,6 +13,7 @@ import jakarta.persistence.Table;
 @Table(name="VIDEO_UPLOADS")
 public class VideoUpload {
 	
+
 	@Id
 	@Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +51,25 @@ public class VideoUpload {
 	
 	@Column(name = "duration")
 	private int duration;
+	
+	public VideoUpload() {}
+	
+	public VideoUpload(Long id, String title, String author, String description, String tags, String thumbnailUrl,
+			String videoUrl, Date createdAt, String geoLocation, int views, int likes, int duration) {
+		this.id = id;
+		this.title = title;
+		this.author = author;
+		this.description = description;
+		this.tags = tags;
+		this.thumbnailUrl = thumbnailUrl;
+		this.videoUrl = videoUrl;
+		this.createdAt = createdAt;
+		this.geoLocation = geoLocation;
+		this.views = views;
+		this.likes = likes;
+		this.duration = duration;
+	}
+	
 	
 	public int getDuration() {
 		return duration;
