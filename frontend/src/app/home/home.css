@@ -4,7 +4,7 @@
 }
 
 .container {
-  max-width: 1400px;
+  max-width: 1700px;
   margin: 0 auto;
   padding: 18px 18px 28px;
 }
@@ -177,4 +177,90 @@
 @media (max-width: 560px) {
   .grid { grid-template-columns: 1fr; }
   .search { max-width: 100%; }
+}
+
+/* ===== GRID + SIDEBAR LAYOUT ===== */
+
+.main-layout {
+  display: flex;
+  align-items: flex-start; /* aligns titles automatically */
+  gap: 32px;
+}
+
+.video-section {
+  flex: 1; /* takes remaining space */
+  min-width: 0;
+}
+
+
+/* ===== SIDEBAR ===== */
+
+.sidebar-title {
+  color: #fff;
+  font-weight: 800;
+  font-size: 22px;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+.sidebar-section {
+  width: 280px;
+  flex-shrink: 0;
+}
+.watchparty-card {
+  background: #121212;
+  border: 1px solid #272727;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.watchparty-card:hover {
+  border-color: rgba(220, 38, 38, 0.65);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  transform: translateY(-2px);
+}
+
+.party-header {
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.watchparty-card button {
+  margin-top: 6px;
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.watchparty-card button:hover {
+  background: #f43f5e;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 1400px) {
+  .content-row {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    width: 100%;
+    max-width: 420px;
+    margin-top: 16px;
+  }
 }

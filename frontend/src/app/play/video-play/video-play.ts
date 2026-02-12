@@ -9,6 +9,7 @@ import { Auth } from '../../infrastructure/service/auth'
 import { VideoPreview } from '../../model/videoPreview';
 import { ToastrService } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
+import { WatchpartyService } from '../../navbar/service/watchparty-service';
 
 
 @Component({
@@ -25,10 +26,11 @@ export class VideoPlay implements OnInit {
   currentCommentPage = 0;
   commentPageSize = 10;
   commentContent: string = '';
+  initialVideoStart: boolean = true;
 
   constructor(private commentService: CommentService, private uploadService: UploadService,
               private route: ActivatedRoute, private authService: Auth, private router: Router,
-              private toastr: ToastrService
+              private toastr: ToastrService, private watchPartyService: WatchpartyService
   ){}
 
   ngOnInit(): void{
@@ -47,36 +49,35 @@ export class VideoPlay implements OnInit {
         console.error('Failed to load video', error);
       });
       this.commentService.getVideoComments(videoId, this.currentCommentPage, this.commentPageSize).subscribe(comments => {
-        this.comments.set(comments);
+        this.comments.set(comments.content);
       }, error => {
         console.error('Failed to load video', error);
       });
+      this.uploadService.incrementViewCount(videoId).subscribe();
   });
   }
 
+  onVideoStart(event: Event) {
+    if (this.initialVideoStart! || !this.loggedInUsername) return;
+    this.watchPartyService.startWatchParty(this.loggedInUsername!,this.video()!.id)
+    this.initialVideoStart = false;
+  }
   nextCommentsPage(page: number): void {
     this.currentCommentPage += 1;
     this.commentService.getVideoComments(this.video()!.id, this.currentCommentPage, this.commentPageSize).subscribe(comments => {
-            this.comments.set(comments);
+            this.comments.set(comments.content);
           }, error => {
             console.error('Failed to load video', error);
     });
   }
 
-  likeVideo(): void {
-    if (!this.loggedInUsername)
-    {
-      this.toastr.error('Please login first to like')
-      this.router.navigate(['/login'])
-    }
-    //Like logic
-  }
 
   commentVideo(): void {
-     if (!this.loggedInUsername)
+    if (!this.loggedInUsername)
     {
       this.toastr.error('Please login first to comment')
       this.router.navigate(['/login'])
+      return
     };
     const comment = {} as Comment;
     comment.content = this.commentContent;

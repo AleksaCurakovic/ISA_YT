@@ -35,8 +35,8 @@
   </cache>
   
    <cache alias="comments" uses-template="default">
-    <key-type>java.lang.Long</key-type> 
-    <value-type>com.springboot.isa.yt.model.Comment</value-type>
+    <key-type>java.lang.Object</key-type>
+    <value-type>org.springframework.data.domain.PageImpl</value-type>
   </cache>
 
 </config>

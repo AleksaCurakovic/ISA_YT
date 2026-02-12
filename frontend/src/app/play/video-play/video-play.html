@@ -5,7 +5,7 @@
       <!-- LEFT: Main Video Column -->
       <div class="video-column">
         <div class="player">
-          <video [src]="'http://localhost:8080' + video()!.videoUrl" controls></video>
+          <video [src]="'http://localhost:8080' + video()!.videoUrl" controls (play)="onVideoStart($event)" autoplay></video>
         </div>
 
         <!-- Video Info -->
@@ -22,9 +22,6 @@
               </div>
             </div>
 
-            <div class="watch-actions">
-              <button class="btn btn-solid" (click)="likeVideo()">👍 {{video()!.likes}}</button>
-            </div>
           </div>
 
           <!-- Video Description with Views and Date -->

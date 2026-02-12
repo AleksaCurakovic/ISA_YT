@@ -71,7 +71,7 @@ export class Auth {
     localStorage.removeItem('jwt');
     this.authStateSubject.next(null);
     this.toastr.success('Successfully logged out')
-    this.router.navigate(['/home'])
+    this.router.navigate(['/'])
   }
 
   whoAmI(): Observable<Profile> {

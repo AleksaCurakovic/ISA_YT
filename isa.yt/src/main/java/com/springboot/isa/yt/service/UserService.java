@@ -12,4 +12,5 @@ public interface UserService {
     List<User> findAll ();
 	User register(UserRequestDTO userRequest);
 	User save(User user);
+	void removeUsersFromParty(Long id);
 }

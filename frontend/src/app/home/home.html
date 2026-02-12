@@ -1,37 +1,61 @@
 <div class="home">
   <div class="container">
+
     <div class="topbar">
       <h1 class="headline">Home</h1>
+      <h1 class="sidebar-title">Watch Parties</h1>
     </div>
-    <div class="grid">
-      <!-- CARD 1 -->
-    @for (video of videoPreview(); track video.id) {
-        <a class="card" (click)="playVideo(video.id)">
 
-            <div class="thumb">
-            <img
-                class="thumb-img"
-                [src]= "'http://localhost:8080' + video.thumbnailUrl"
-                alt="thumbnail"
-            />
-            <span class="duration">{{ getDurationLabel(video.duration)}}</span>
+    <div class="main-layout">
+
+      <!-- LEFT: Videos -->
+      <div class="video-section">
+        <div class="grid">
+          @for (video of videoPreview(); track video.id) {
+            <a class="card" (click)="playVideo(video.id)">
+              <div class="thumb">
+                <img class="thumb-img"
+                     [src]="'http://localhost:8080' + video.thumbnailUrl"/>
+                <span class="duration">{{ getDurationLabel(video.duration) }}</span>
+              </div>
+
+              <div class="meta">
+                <div class="video-title">{{ video.title }}</div>
+                <div class="sub">
+                  <span class="author">{{ video.author }}</span>
+                  <span class="dot">•</span>
+                  <span class="time">{{ video.createdAt | date:'MMM d, y, h:mm a' }}</span>
+                </div>
+                <div class="tags">
+                  <span class="tag">{{ video.tags }}</span>
+                </div>
+              </div>
+            </a>
+          }
+        </div>
+      </div>
+
+      <!-- RIGHT: Sidebar -->
+      <div class="sidebar-section">
+        
+
+        <div class="sidebar">
+          @for (party of watchParties(); track party.host) {
+            <div class="watchparty-card">
+              <div class="party-header">
+                {{ party.host }} 's Watch Party
+              </div>
+              @if(activePartySession && activePartySession.host === party.host){
+                <button (click)="leaveWatchParty(party)">Leave</button>
+              }@else{
+                <button (click)="joinWatchParty(party)" [disabled]="activePartySession">Join</button>
+              }
             </div>
+          }
+        </div>
 
-            <div class="meta">
-            <div class="video-title">{{ video.title }}</div>
+      </div>
 
-            <div class="sub">
-                <span class="author">{{ video.author }}</span>
-                <span class="dot">•</span>
-                <span class="time">{{ video.createdAt | date:'MMM d, y, h:mm a' }}</span>
-            </div>
-
-            <div class="tags">
-                <span class="tag">{{ video.tags }}</span>
-            </div>
-            </div>
-
-        </a>
-    }
     </div>
+  </div>
 </div>

@@ -9,6 +9,7 @@
       <a class="btn btn-solid" routerLink="/login">Login</a>
     }
     @else{
+      <button class="btn btn-solid" (click)="createWatchParty()" [disabled]="(watchPartyServis.activePartySession$ | async)">Create Watch Party</button>
       <a class="btn btn-outline" routerLink="/upload">Upload video</a>
       <a class="btn btn-solid" (click)="logout()">Logout</a>
       <a class="username"  [routerLink]="['/profile']" [queryParams]="{ userName: loggedInUsername }">{{ loggedInUsername }}</a>

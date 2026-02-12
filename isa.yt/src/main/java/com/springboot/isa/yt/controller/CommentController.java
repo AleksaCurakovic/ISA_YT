@@ -35,13 +35,13 @@ public class CommentController {
 	
 	@GetMapping("/comments/{videoId}")
 	public ResponseEntity<Page<Comment>> getComments(
-	        @PathVariable Long id,
+	        @PathVariable Long videoId,
 	        @RequestParam int page,
 	        @RequestParam int size) {
 	    
 	    PageRequest pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 	    
-	    return ResponseEntity.ok(commentService.findByVideoUploadId(id, pageable));
+	    return ResponseEntity.ok(commentService.findByVideoUploadId(videoId, pageable));
 	}
 	
 	@PostMapping("/comment")

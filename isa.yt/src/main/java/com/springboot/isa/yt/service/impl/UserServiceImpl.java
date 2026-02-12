@@ -13,6 +13,8 @@ import com.springboot.isa.yt.repository.UserRepository;
 import com.springboot.isa.yt.service.RoleService;
 import com.springboot.isa.yt.service.UserService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class UserServiceImpl implements UserService{
 	@Autowired
@@ -61,5 +63,12 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public User save(User user) {
 		return userRepository.save(user);
+	}
+
+	@Override
+	@Transactional
+	public void removeUsersFromParty(Long partyId) {
+		 List<User> users = userRepository.findAllByWatchPartyId(partyId);
+		 users.forEach(user -> user.setWatchParty(null));
 	}
 }

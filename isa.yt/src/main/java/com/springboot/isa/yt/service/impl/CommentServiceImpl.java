@@ -17,7 +17,7 @@ public class CommentServiceImpl implements CommentService {
 	private CommentRepository commentRepository;
 
 	@Override
-	@Cacheable(value = "comments_paged", 
+	@Cacheable(value = "comments", 
     	key = "{#id, #pageable.pageNumber, #pageable.pageSize}")
 	public Page<Comment> findByVideoUploadId(Long id, Pageable pageable) {
 		return commentRepository.findByVideoUploadId(id, pageable);

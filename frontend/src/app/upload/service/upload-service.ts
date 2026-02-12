@@ -31,4 +31,8 @@ export class UploadService  {
   getUserUploads(userName: string): Observable<VideoPreview[]> {
     return this.http.get<VideoPreview[]>(`${this.API_URL}/getUserUploads/${userName}`);
   }
+
+  incrementViewCount(videoId: number): Observable<void> {
+    return this.http.patch<void>(`${this.API_URL}/incrementView/${videoId}`, {});
+  }
 }

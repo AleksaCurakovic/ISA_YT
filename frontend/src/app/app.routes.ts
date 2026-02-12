@@ -14,3 +14,7 @@ export const routes: Routes = [
     { path: 'play', component: VideoPlay},
     { path: 'profile', component: ProfileOverview}
 ];
+
+
+
+

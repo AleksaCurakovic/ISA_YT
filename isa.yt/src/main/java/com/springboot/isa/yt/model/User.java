@@ -44,6 +44,10 @@ public class User implements UserDetails {
 
     @Column(name = "enabled")
     private boolean enabled;
+    
+    @JoinColumn(name = "watch_party_id", nullable = true)
+    @OneToOne
+    private WatchParty watchParty;
 
     @Column(name = "last_password_reset_date")
     private Timestamp lastPasswordResetDate;
@@ -61,8 +65,18 @@ public class User implements UserDetails {
     public void setId(Long id) {
         this.id = id;
     }
+    
+    
 
-    public String getUsername() {
+    public WatchParty getWatchParty() {
+		return watchParty;
+	}
+
+	public void setWatchParty(WatchParty watchParty) {
+		this.watchParty = watchParty;
+	}
+
+	public String getUsername() {
         return username;
     }
 

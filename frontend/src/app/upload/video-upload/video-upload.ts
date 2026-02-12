@@ -176,23 +176,26 @@ export class VideoUpload implements OnDestroy {
           if (event.type === HttpEventType.UploadProgress) {
             const total = event.total ?? 0;
             this.uploadPct = total ? Math.round((100 * event.loaded) / total) : 0;
+            this.cdr.markForCheck();
           }
 
           if (event.type === HttpEventType.Response) {
             this.uploadPct = 100;
             this.isUploading = false;
             this.uploadFinished = true;
+            this.cdr.markForCheck();
             console.log('Uploaded:', event.body);
             this.toastr.success('Video uploaded')
-            this.router.navigate(['/home'])
+            this.router.navigate([''])
           }
-          this.cdr.markForCheck();
+            
         },
         error: (err: HttpErrorResponse) => {
           this.isUploading = false;
           this.uploadError =
             err.error?.message || (typeof err.error === 'string' ? err.error : 'Upload failed');
           this.toastr.error('Video upload failed')
+          this.cdr.markForCheck();
         },
       });
 
